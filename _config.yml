@@ -2,3 +2,8 @@ name: Nubis Development
 
 permalink: pretty
 pygments: true
+
+authors:
+  tim:
+    full_name: Tim van Dalen
+    gplus_id: 100487696573936783003

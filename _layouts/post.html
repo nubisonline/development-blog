@@ -1,9 +1,18 @@
 ---
 layout: default
 ---
-<h2>{{ page.title }}</h2>
-<p class="meta">{{ page.date | date_to_string }}</p>
 
-<div class="post">
-{{ content }}
-</div>
+{% assign author = site.authors[page.author] %}
+<article>
+    <header>
+        <h1 class="headline">{{ page.title }}</h1>
+        <div class="byline">
+            <address class="author">By <a rel="author" href="https://plus.google.com/{{ author.gplus_id }}/?rel=author">{{ author.full_name }}</a></address> 
+            on <time pubdate datetime="{{ page.date | date: "%Y-%m-%d" }}" title="{{ page.date | date_to_long_string }}">{{ page.date | date_to_string }}</time>
+        </div>
+    </header>
+
+    <div class="article-content post">
+		{{ content }}
+    </div>
+</article>
