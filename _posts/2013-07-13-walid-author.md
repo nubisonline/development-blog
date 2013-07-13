@@ -6,4 +6,4 @@ author: walid
 
 This post has Walid as the author.
 
-It should show up as such in Google search results.
+It should show up as such in Google search results..
