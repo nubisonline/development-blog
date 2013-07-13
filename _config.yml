@@ -3,6 +3,8 @@ name: Nubis Development
 permalink: pretty
 pygments: true
 
+source_link: https://github.com/nubisonline/development-blog/blob/gh-pages/
+
 authors:
   tim:
     full_name: Tim van Dalen
