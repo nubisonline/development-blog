@@ -7,11 +7,17 @@ source_link: https://github.com/nubisonline/development-blog/blob/gh-pages/
 
 authors:
   tim:
+    display_name: Tim
     full_name: Tim van Dalen
     gplus_id: 100487696573936783003
+    position: Head of Development
   walid:
+    display_name: Walid
     full_name: Walid Said
     gplus_id: 104993994538898250860
+    position: Senior Developer
   remco:
+    display_name: Remco
     full_name: Remco Plasmeijer
     gplus_id: 102632274470030995679
+    position: Systems Architect
