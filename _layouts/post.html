@@ -7,7 +7,13 @@ layout: default
     <header itemscope itemtype="http://schema.org/BlogPosting">
         <h1 class="headline" itemprop="name">{{ page.title }}</h1>
         <div class="byline">
-            By <a itemprop="author" rel="author" href="https://plus.google.com/{{ author.gplus_id }}/?rel=author">{{ author.full_name }}</a> on <time itemprop="dateCreated" pubdate datetime="{{ page.date | date: "%Y-%m-%d" }}" title="{{ page.date | date_to_long_string }}">{{ page.date | date_to_string }}</time>
+            By 
+			<span itemprop="author" itemscope itemtype="http://schema.org/Person">
+				<meta itemprop="jobTitle" content="{{ author.position }}" />
+				<meta itemprop="name" content="{{ author.full_name }}" />
+				<a rel="author" href='https://plus.google.com/{{ author.gplus_id }}/?rel=author' itemprop='url'>{{ author.full_name }}</a>
+			</span>
+			on <time itemprop="dateCreated" pubdate datetime="{{ page.date | date: "%Y-%m-%d" }}" title="{{ page.date | date_to_long_string }}">{{ page.date | date_to_string }}</time>
         </div>
 		<meta itemprop="description" content="{{ page.description }}" />
     </header>
