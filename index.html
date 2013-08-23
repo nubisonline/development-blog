@@ -4,10 +4,17 @@ title: Nubis Development
 ---
 
 <div id="home">
-  <h1>Blog Posts</h1>
-  <ul class="posts">
-    {% for post in site.posts %}
-      <li><span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ post.url }}">{{ post.title }}</a></li>
-    {% endfor %}
-  </ul>
+	<header>
+		<h1>Blog Posts</h1>
+	</header>
+	{% for post in site.posts %}
+	<section class="post" itemscope itemtype="http://schema.org/BlogPosting">
+		<header>
+			<h2 itemprop="name"><a href="{{ post.url }}" itemprop="url">{{ post.title }}</a></h2>
+			By {% mention {{ post.author }} author %} on <time itemprop="dateCreated" pubdate datetime="{{ post.date | date: "%Y-%m-%d" }}" title="{{ post.date | date_to_long_string }}">{{ post.date | date_to_string }}</time>
+			<meta itemprop="description" content="{{ post.description }}" />
+		</header>
+		{{ post.excerpt }}
+	</section>
+	{% endfor %}
 </div>
