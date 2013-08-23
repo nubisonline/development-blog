@@ -27,7 +27,13 @@
     <header itemscope itemtype="http://schema.org/BlogPosting">
         <h1 class="headline" itemprop="name">Post with Tim as author</h1>
         <div class="byline">
-            By <a itemprop="author" rel="author" href="https://plus.google.com/100487696573936783003/?rel=author">Tim van Dalen</a> on <time itemprop="dateCreated" pubdate datetime="2013-07-13" title="13 July 2013">13 Jul 2013</time>
+            By 
+			<span itemprop="author" itemscope itemtype="http://schema.org/Person">
+				<meta itemprop="jobTitle" content="Head of Development" />
+				<meta itemprop="name" content="Tim van Dalen" />
+				<a rel="author" href='https://plus.google.com/100487696573936783003/?rel=author' itemprop='url'>Tim van Dalen</a>
+			</span>
+			on <time itemprop="dateCreated" pubdate datetime="2013-07-13" title="13 July 2013">13 Jul 2013</time>
         </div>
 		<meta itemprop="description" content="" />
     </header>
