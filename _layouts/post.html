@@ -7,7 +7,7 @@ layout: default
     <header itemscope itemtype="http://schema.org/BlogPosting">
         <h1 class="headline" itemprop="name">{{ page.title }}</h1>
         <div class="byline">
-            By {% mention {{ page.author }} author %} on <time itemprop="dateCreated" pubdate datetime="{{ page.date | date: "%Y-%m-%d" }}" title="{{ page.date | date_to_long_string }}">{{ page.date | date_to_string }}</time>
+            By <a itemprop="author" rel="author" href="https://plus.google.com/{{ author.gplus_id }}/?rel=author">{{ author.full_name }}</a> on <time itemprop="dateCreated" pubdate datetime="{{ page.date | date: "%Y-%m-%d" }}" title="{{ page.date | date_to_long_string }}">{{ page.date | date_to_string }}</time>
         </div>
 		<meta itemprop="description" content="{{ page.description }}" />
     </header>
