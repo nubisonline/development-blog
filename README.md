@@ -20,7 +20,7 @@ Apart from the motivation to do so, there isn't much of a difference between con
 Only senior Nubis developers have push access to this repository and nothing should be committed directly here.
 We have two separate branches for staging, one for content and one for code.
 
-![The branching model](http://nubisonline.nl/files/dev-blog/branches.png)
+![The branching model](http://nubisonline.nl/files/dev-blog/branches-v2.png)
 
 If you are going to work on something, please make sure you do it in your own fork and then make a pull request to the right branch.
 We cannot merge in requests to the wrong branch and we will close them immediately.
