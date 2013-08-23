@@ -1,3 +1,6 @@
 [submodule "_plugins/jekyll-mention-schema"]
 	path = _plugins/jekyll-mention-schema
 	url = https://github.com/nubisonline/jekyll-mention-schema.git
+[submodule "_plugins/jekyll-xkcd-embed"]
+	path = _plugins/jekyll-xkcd-embed
+	url = git@github.com:nubisonline/jekyll-xckd-embed.git
