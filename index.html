@@ -4,17 +4,40 @@ title: Nubis Development
 ---
 
 <div id="home">
-	<header>
-		<h1>Blog Posts</h1>
-	</header>
-	{% for post in site.posts %}
-	<section class="post" itemscope itemtype="http://schema.org/BlogPosting">
+	<section id="post-index">
 		<header>
-			<h2 itemprop="name"><a href="{{ post.url }}" itemprop="url">{{ post.title }}</a></h2>
-			By {% mention {{ post.author }} author %} on <time itemprop="dateCreated" pubdate datetime="{{ post.date | date: "%Y-%m-%d" }}" title="{{ post.date | date_to_long_string }}">{{ post.date | date_to_string }}</time>
-			<meta itemprop="description" content="{{ post.description }}" />
+			<h1>Blog Posts</h1>
 		</header>
-		{{ post.excerpt }}
+		{% for post in site.posts %}
+		<section class="post" itemscope itemtype="http://schema.org/BlogPosting">
+			<header>
+				<h2 itemprop="name"><a href="{{ post.url }}" itemprop="url">{{ post.title }}</a></h2>
+				By {% mention {{ post.author }} author %} on <time itemprop="dateCreated" pubdate datetime="{{ post.date | date: "%Y-%m-%d" }}" title="{{ post.date | date_to_long_string }}">{{ post.date | date_to_string }}</time>
+				<meta itemprop="description" content="{{ post.description }}" />
+			</header>
+			{{ post.excerpt }}
+		</section>
+		{% endfor %}
 	</section>
-	{% endfor %}
+	<aside id="sidebar">
+		<section id="company-info" itemscope itemtype="http://schema.org/Corporation">
+			<img itemprop="image" alt="Logo" src="{{ site.base_url }}img/logo.png">
+			<h2 itemprop="name">{{ site.name }}</h2>
+			<p itemprop="description">{{ site.tagline }}</p>
+			
+			<div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
+				<address>
+					<p itemprop="streetAddress">Herengracht 104</p>
+					<p itemprop="postalCode">1015 BS</p>
+					<p itemprop="addressLocality">Amsterdam</p>
+					<p itemprop="addressCountry">NL</p>
+				</address>
+				<p itemprop="telephone">{{ site.contact.phone }}</p>
+				<p itemprop="email"><a href="mailto:{{ site.contact_email }}">{{ site.contact.email }}</a></p>
+			</div>
+			
+			<meta itemprop="url" content="{{ site.base_url }}" />
+			<meta itemprop="logo" content="{{ site.base_url }}img/logo-big.png" />
+		</section>
+	</aside>
 </div>
