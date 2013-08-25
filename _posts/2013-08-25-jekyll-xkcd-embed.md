@@ -5,6 +5,7 @@ categories: jekyll-plugin
 tags: [meta]
 description: jekyll-xkcd-embed is a plugin for the Jekyll blogging system that alllows you to embed a xkcd comic
 author: robbert
+excerpt: <p>In everyday conversation, there&#8217;s often a relevant-xkcd-moment. When the conversation has reached a state which has been described in a xkcd comic. In writing, these moments occur too. This is why <span itemscope='' itemtype='http://schema.org/Person'><meta content='Tim van Dalen' itemprop='name' /><meta content='Head of Development' itemprop='jobTitle' /><a href='https://plus.google.com/100487696573936783003' itemprop='url'>Tim</a></span> decided that we needed an easy way to embed xkcd comics in our blog posts.</p>
 ---
 
 In everyday conversation, there's often a relevant-xkcd-moment. When the conversation has reached a state which has been described in a xkcd comic. In writing, these moments occur too. This is why {% mention tim %} decided that we needed an easy way to embed xkcd comics in our blog posts.
