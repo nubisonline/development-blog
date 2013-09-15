@@ -12,6 +12,8 @@ pygments: true
 
 source_link: https://github.com/nubisonline/development-blog/blob/source/
 
+ga_code: UA-43461893-1
+
 authors:
   tim:
     display_name: Tim
