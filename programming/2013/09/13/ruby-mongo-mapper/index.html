@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>{Ruby,MongoDB,MongoMapper} = Strict models and implied schemas</title>
+        <meta name="viewport" content="width=device-width">
+
+        <!-- syntax highlighting CSS -->
+        <link rel="stylesheet" href="/css/syntax.css">
+
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="/css/main.css">
+
+    </head>
+    <body>
+		<a href="https://github.com/nubisonline/development-blog/blob/source/_posts/2013-09-13-ruby-mongo-mapper.md"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub"></a>
+	
+        <div class="container">
+          <div class="site">
+            <div class="header">
+              <h1 class="title"><a href="/">Nubis Development</a></h1>
+              <a class="extra" href="/">home</a>
+            </div>
+                
+<article>
+    <header itemscope itemtype="http://schema.org/BlogPosting">
+        <h1 class="headline" itemprop="name">{Ruby,MongoDB,MongoMapper} = Strict models and implied schemas</h1>
+        <div class="byline">
+            By 
+			<span itemprop="author" itemscope itemtype="http://schema.org/Person">
+				<meta itemprop="jobTitle" content="Head of Development" />
+				<meta itemprop="name" content="Tim van Dalen" />
+				<a rel="author" href='https://plus.google.com/100487696573936783003/?rel=author' itemprop='url'>Tim van Dalen</a>
+			</span>
+			on <time itemprop="dateCreated" pubdate datetime="2013-09-13" title="13 September 2013">13 Sep 2013</time>
+        </div>
+		<meta itemprop="description" content="" />
+    </header>
+
+    <div class="article-content post">
+		<p>Every web developer that has ever worked with PHP and MySQL (still the most common database solution out there) knows that it can be quite frustrating to set up your database schema. Most people start with a simple ER diagram that they then translate into SQL (and most web devs will use phpMyAdmin for this &#8216;chore&#8217;). When that&#8217;s done, you can really get cracking. Looking at your database schema, you can start to write your database interface logic. If you have a change in functionality you need to translate this to SQL and apply it to your schema.</p>
+
+<p>Because of this separation between your code and the database your schema &#8216;lives&#8217; in two places. This creates a strong coupling between your code and the database schema. What that means is that if you change one, you need to change the other for everything to still work as expected. Usually, you want to avoid coupling because it can cause hard to track down bugs. Sure, you can store your SQL alongside your code in your versioning software, but that&#8217;s just not good enough (unless you use some arcane magic to update the database schema without data loss on every x runs of your program).</p>
+
+<p>So far for what it&#8217;s usually like for web developers. I&#8217;m now going to describe how <a href='https://github.com/mongomapper/mongomapper'>MongoMapper</a> handles things. I&#8217;ll first describe the MongoDB system, for those that haven&#8217;t encountered it yet.</p>
+
+<p>In its core, mongo is a document-oriented database system, as opposed to a relational database. Mongo doesn&#8217;t have tables, but <em>collections of documents</em>. These documents are represented as JSON (or rather BSON, a binary compatible form of JSON). For instance:</p>
+<div class='highlight'><pre><code class='json'><span class='p'>{</span>
+	<span class='nt'>&quot;first_name&quot;</span><span class='p'>:</span> <span class='s2'>&quot;John&quot;</span><span class='p'>,</span>
+	<span class='nt'>&quot;last_name&quot;</span><span class='p'>:</span> <span class='s2'>&quot;Doe&quot;</span><span class='p'>,</span>
+	<span class='nt'>&quot;initials&quot;</span><span class='p'>:</span> <span class='s2'>&quot;J.D.&quot;</span><span class='p'>,</span>
+	<span class='nt'>&quot;age&quot;</span><span class='p'>:</span> <span class='mi'>24</span>
+<span class='p'>}</span>
+</code></pre></div>
+<p>But the following is also a document:</p>
+<div class='highlight'><pre><code class='json'><span class='p'>{</span>
+	<span class='nt'>&quot;name&quot;</span><span class='p'>:</span> <span class='p'>{</span>
+		<span class='nt'>&quot;first&quot;</span><span class='p'>:</span> <span class='s2'>&quot;John&quot;</span><span class='p'>,</span>
+		<span class='nt'>&quot;last&quot;</span><span class='p'>:</span> <span class='s2'>&quot;Doe&quot;</span><span class='p'>,</span>
+		<span class='nt'>&quot;initials&quot;</span><span class='p'>:</span> <span class='s2'>&quot;J.D.&quot;</span>
+	<span class='p'>},</span>
+	<span class='nt'>&quot;age&quot;</span><span class='p'>:</span> <span class='mi'>24</span><span class='p'>,</span>
+	<span class='nt'>&quot;comments&quot;</span><span class='p'>:</span> <span class='p'>[</span>
+		<span class='p'>{</span> <span class='nt'>&quot;text&quot;</span><span class='p'>:</span> <span class='s2'>&quot;I liked this&quot;</span><span class='p'>,</span> <span class='nt'>&quot;article&quot;</span><span class='p'>:</span> <span class='p'>{</span> <span class='err'>...</span> <span class='p'>}</span> <span class='p'>},</span>
+		<span class='p'>{</span> <span class='nt'>&quot;text&quot;</span><span class='p'>:</span> <span class='s2'>&quot;I didn&#39;t like this&quot;</span><span class='p'>,</span> <span class='nt'>&quot;article&quot;</span><span class='p'>:</span> <span class='p'>{</span> <span class='err'>...</span> <span class='p'>}</span> <span class='p'>},</span>
+		<span class='p'>{</span> <span class='nt'>&quot;text&quot;</span><span class='p'>:</span> <span class='s2'>&quot;This was great!&quot;</span><span class='p'>,</span> <span class='nt'>&quot;article&quot;</span><span class='p'>:</span> <span class='p'>{</span> <span class='err'>...</span> <span class='p'>}</span> <span class='p'>}</span>
+	<span class='p'>]</span>
+<span class='p'>}</span>
+</code></pre></div>
+<p>As you can see, documents are much more versatile than tables because they have a sense of hierarchy. Note that you can still build relational-like models using mongo. For instance, in the second example, you would probably include the key of an article in each comment, instead of the actual entire article.</p>
+
+<p>Mongo provides a pretty easy way to access collections:</p>
+<div class='highlight'><pre><code class='js'><span class='nx'>db</span><span class='p'>.</span><span class='nx'>a</span><span class='p'>.</span><span class='nx'>save</span><span class='p'>({</span><span class='nx'>a</span><span class='o'>:</span> <span class='mi'>25</span><span class='p'>})</span>
+<span class='nx'>db</span><span class='p'>.</span><span class='nx'>a</span><span class='p'>.</span><span class='nx'>find</span><span class='p'>()</span>
+ <span class='o'>=&gt;</span> <span class='p'>[</span> <span class='p'>{</span><span class='nx'>a</span><span class='o'>:</span> <span class='mi'>25</span><span class='p'>}</span> <span class='p'>]</span>
+</code></pre></div>
+<p>Good, now on to MongoMapper. It defines itself as &#8216;a mongo object relationship mapper&#8217;, which means that it provides a mechanism for translating Ruby objects into Mongo and vice-versa. Now what that means to me is this: persistent storage for your Ruby runtime objects. And as far as I&#8217;m concerned, that is <em>amazing</em>.</p>
+
+<p>After I played with it for a night I found that it was a little bit less transparent than I had hoped and I had to mess around with a lot of details before I got it working correctly, but the underlying philosophy is truely beautiful. You can mark your Ruby objects as Documents and MongoMapper will take care of everything for you (as long as you use their constructor). Consider these classes:</p>
+<div class='highlight'><pre><code class='ruby'><span class='k'>class</span> <span class='nc'>User</span>
+	<span class='kp'>include</span> <span class='ss'>MongoMapper</span><span class='p'>:</span><span class='ss'>:Document</span>
+
+	<span class='n'>key</span> <span class='ss'>:name</span><span class='p'>,</span> <span class='no'>Name</span>
+	<span class='n'>key</span> <span class='ss'>:age</span><span class='p'>,</span> <span class='nb'>Integer</span>
+	<span class='n'>many</span> <span class='ss'>:comments</span>
+	<span class='n'>many</span> <span class='ss'>:articles</span>
+<span class='k'>end</span>
+
+<span class='k'>class</span> <span class='nc'>Name</span>
+	<span class='kp'>include</span> <span class='ss'>MongoMapper</span><span class='p'>:</span><span class='ss'>:EmbeddedDocument</span>
+
+	<span class='n'>key</span> <span class='ss'>:first</span><span class='p'>,</span> <span class='nb'>String</span>
+	<span class='n'>key</span> <span class='ss'>:last</span><span class='p'>,</span> <span class='nb'>String</span>
+	<span class='n'>key</span> <span class='ss'>:initials</span><span class='p'>,</span> <span class='nb'>String</span>
+<span class='k'>end</span>
+
+<span class='k'>class</span> <span class='nc'>Comment</span>
+	<span class='kp'>include</span> <span class='ss'>MongoMapper</span><span class='p'>:</span><span class='ss'>:Document</span>
+
+	<span class='n'>key</span> <span class='ss'>:text</span><span class='p'>,</span> <span class='nb'>String</span>
+	<span class='n'>belongs_to</span> <span class='ss'>:article</span>
+	<span class='n'>belongs_to</span> <span class='ss'>:user</span>
+<span class='k'>end</span>
+
+<span class='k'>class</span> <span class='nc'>Article</span>
+	<span class='kp'>include</span> <span class='ss'>MongoMapper</span><span class='p'>:</span><span class='ss'>:Document</span>
+	
+	<span class='n'>belongs_to</span> <span class='ss'>:author</span><span class='p'>,</span> <span class='ss'>:class_name</span> <span class='o'>=&gt;</span> <span class='s1'>&#39;User&#39;</span>
+	<span class='n'>key</span> <span class='ss'>:text</span><span class='p'>,</span> <span class='nb'>String</span>
+
+	<span class='n'>many</span> <span class='ss'>:comments</span>
+<span class='k'>end</span>
+</code></pre></div>
+<p>This will create a model that is represented like this in UML:</p>
+
+<p><img alt='UML diagrams - how enterprisey!' src='/post-imgs/mongomapper-uml.png' /></p>
+
+<p>One of the interesting things to note here is that in class <code>User</code>, MongoMapper will read <code>many :comments</code> as: a <code>User</code> has 0..\infty instances of class Comment. It derives that info just from me giving the key the name <code>comments</code> (and the fact that there are <code>many</code>). In class <code>Article</code> you see that I explicitly state that <code>author</code> is of type User since I don&#8217;t want to call the property &#8216;user&#8217; in that class.</p>
+
+<p>The thing that really blew my mind was that even though this is stored in Mongo in a relational way (there will be three collections, <code>user</code>, <code>comment</code> and <code>article</code> and relations like <code>belongs_to :user</code> will generate a JSON entry <code>&quot;user_id&quot;: &quot;233f32f32f332ras&quot;</code>), all the information you need is dynamically available if you have a reference to an object. Assume that the John Doe that I defined earlier is in the database.</p>
+<div class='highlight'><pre><code class='ruby'><span class='n'>john</span> <span class='o'>=</span> <span class='no'>User</span><span class='o'>.</span><span class='n'>first</span><span class='p'>(</span><span class='ss'>:age</span> <span class='o'>=&gt;</span> <span class='mi'>24</span><span class='p'>)</span>
+<span class='nb'>puts</span> <span class='n'>john</span><span class='o'>.</span><span class='n'>comments</span><span class='o'>[</span><span class='mi'>0</span><span class='o'>].</span><span class='n'>article</span><span class='o'>.</span><span class='n'>author</span><span class='o'>.</span><span class='n'>name</span><span class='o'>.</span><span class='n'>first</span>
+</code></pre></div>
+<p>That <em>one</em> line will perform all the queries nessecary to:</p>
+
+<ol>
+<li>Select all comments by John</li>
+
+<li>Get the first</li>
+
+<li>Select the article that comment was made on using the article id</li>
+
+<li>Select the author for that article using the author_id</li>
+
+<li>Get the Name object for that author</li>
+</ol>
+
+<p>For those of you with PHP/MySQL experience, think about the monster query you would need to accomplish the same, providing you have <code>User</code>, <code>Name</code>, <code>Comment</code> and <code>Article</code> tables (although to be fair you would probably flatten <code>Name</code> into <code>User</code>).</p>
+
+<p>So, using MongoMapper with Ruby and MongoDB, all the structure in your database comes from your model which solves the coupling problem and also makes working with it a whole lot more fun. There are a couple of downsides though, the most important of which is that if your database doesn&#8217;t have an internally defined structure, you need to keep that structure in mind yourself when you make manual edits. If you need to pre-fill a MySQL database, you would probably just use phpMyAdmin and fill out the web forms.</p>
+
+<p>Since the schema comes from your application model, you can&#8217;t do that easily when you are using MongoMapper. The easiest way to pre-fill data is to just write a quick script that imports your model and creates the nessecary data for you. Doing it manually would mean that you have to type out your data in BSON format like MongoMapper would generate it - <em>including</em> a unique ID for each document.</p>
+
+<p>In conclusion, I had a great time playing with MongoMapper and I can highly recommend giving it a try.</p>
+    </div>
+</article>
+
+          </div>
+        </div> <!-- /container -->
+
+		
+		<a href="https://plus.google.com/111860592124351326118" rel="publisher">Google+</a>
+		<script>
+			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+			})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+			ga('create', 'UA-43461893-1', 'nubisonline.nl');
+			ga('send', 'pageview');
+		</script>
+    </body>
+</html>
