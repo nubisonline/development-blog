@@ -3,22 +3,23 @@ layout: default
 ---
 
 {% assign author = site.authors[page.author] %}
-<article>
-    <header itemscope itemtype="http://schema.org/BlogPosting">
-        <h1 class="headline" itemprop="name">{{ page.title }}</h1>
-        <div class="byline">
-            By 
+<article itemscope itemtype="http://schema.org/BlogPosting">
+	<header>
+		<h1 class="headline" itemprop="name">{{ page.title }}</h1>
+		<div class="byline">
+			By 
 			<span itemprop="author" itemscope itemtype="http://schema.org/Person">
 				<meta itemprop="jobTitle" content="{{ author.position }}" />
 				<meta itemprop="name" content="{{ author.full_name }}" />
 				<a rel="author" href='https://plus.google.com/{{ author.gplus_id }}/?rel=author' itemprop='url'>{{ author.full_name }}</a>
 			</span>
 			on <time itemprop="dateCreated" pubdate datetime="{{ page.date | date: "%Y-%m-%d" }}" title="{{ page.date | date_to_long_string }}">{{ page.date | date_to_string }}</time>
-        </div>
+		</div>
 		<meta itemprop="description" content="{{ page.description }}" />
-    </header>
+		{% if page.image %}<meta itemprop="image" content="{{ site.base_url }}post-imgs/{{ page.image }}" />{% endif %}
+	</header>
 
-    <div class="article-content post">
+	<div class="article-content post" itemprop="articleBody">
 		{{ content }}
-    </div>
+	</div>
 </article>
