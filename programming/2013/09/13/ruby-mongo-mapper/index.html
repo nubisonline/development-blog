@@ -23,22 +23,23 @@
               <a class="extra" href="/">home</a>
             </div>
                 
-<article>
-    <header itemscope itemtype="http://schema.org/BlogPosting">
-        <h1 class="headline" itemprop="name">{Ruby,MongoDB,MongoMapper} = Strict models and implied schemas</h1>
-        <div class="byline">
-            By 
+<article itemscope itemtype="http://schema.org/BlogPosting">
+	<header>
+		<h1 class="headline" itemprop="name">{Ruby,MongoDB,MongoMapper} = Strict models and implied schemas</h1>
+		<div class="byline">
+			By 
 			<span itemprop="author" itemscope itemtype="http://schema.org/Person">
 				<meta itemprop="jobTitle" content="Head of Development" />
 				<meta itemprop="name" content="Tim van Dalen" />
 				<a rel="author" href='https://plus.google.com/100487696573936783003/?rel=author' itemprop='url'>Tim van Dalen</a>
 			</span>
 			on <time itemprop="dateCreated" pubdate datetime="2013-09-13" title="13 September 2013">13 Sep 2013</time>
-        </div>
+		</div>
 		<meta itemprop="description" content="" />
-    </header>
+		
+	</header>
 
-    <div class="article-content post">
+	<div class="article-content post" itemprop="articleBody">
 		<p>Every web developer that has ever worked with PHP and MySQL (still the most common database solution out there) knows that it can be quite frustrating to set up your database schema. Most people start with a simple ER diagram that they then translate into SQL (and most web devs will use phpMyAdmin for this &#8216;chore&#8217;). When that&#8217;s done, you can really get cracking. Looking at your database schema, you can start to write your database interface logic. If you have a change in functionality you need to translate this to SQL and apply it to your schema.</p>
 
 <p>Because of this separation between your code and the database your schema &#8216;lives&#8217; in two places. This creates a strong coupling between your code and the database schema. What that means is that if you change one, you need to change the other for everything to still work as expected. Usually, you want to avoid coupling because it can cause hard to track down bugs. Sure, you can store your SQL alongside your code in your versioning software, but that&#8217;s just not good enough (unless you use some arcane magic to update the database schema without data loss on every x runs of your program).</p>
@@ -143,7 +144,7 @@
 <p>Since the schema comes from your application model, you can&#8217;t do that easily when you are using MongoMapper. The easiest way to pre-fill data is to just write a quick script that imports your model and creates the nessecary data for you. Doing it manually would mean that you have to type out your data in BSON format like MongoMapper would generate it - <em>including</em> a unique ID for each document.</p>
 
 <p>In conclusion, I had a great time playing with MongoMapper and I can highly recommend giving it a try.</p>
-    </div>
+	</div>
 </article>
 
           </div>

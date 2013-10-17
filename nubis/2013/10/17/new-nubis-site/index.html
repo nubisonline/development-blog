@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Building the new Nubis site</title>
+        <meta name="viewport" content="width=device-width">
+
+        <!-- syntax highlighting CSS -->
+        <link rel="stylesheet" href="/css/syntax.css">
+
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="/css/main.css">
+
+    </head>
+    <body>
+		<a href="https://github.com/nubisonline/development-blog/blob/source/_posts/2013-10-17-new-nubis-site.md"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub"></a>
+	
+        <div class="container">
+          <div class="site">
+            <div class="header">
+              <h1 class="title"><a href="/">Nubis Development</a></h1>
+              <a class="extra" href="/">home</a>
+            </div>
+                
+<article itemscope itemtype="http://schema.org/BlogPosting">
+	<header>
+		<h1 class="headline" itemprop="name">Building the new Nubis site</h1>
+		<div class="byline">
+			By 
+			<span itemprop="author" itemscope itemtype="http://schema.org/Person">
+				<meta itemprop="jobTitle" content="Head of Development" />
+				<meta itemprop="name" content="Tim van Dalen" />
+				<a rel="author" href='https://plus.google.com/100487696573936783003/?rel=author' itemprop='url'>Tim van Dalen</a>
+			</span>
+			on <time itemprop="dateCreated" pubdate datetime="2013-10-17" title="17 October 2013">17 Oct 2013</time>
+		</div>
+		<meta itemprop="description" content="" />
+		<meta itemprop="image" content="http://development.nub.is/post-imgs/new-site.png" />
+	</header>
+
+	<div class="article-content post" itemprop="articleBody">
+		<p>You may have noticed that Nubis has launched a new shiny website recently, on a new shiny domain: <a href='http://nub.is'>nub.is</a> In this post, I&#8217;ll list some of the technologies that we used to build the new site and some of the problems that we encountered.</p>
+
+<p>If you&#8217;re interested in the code, you can find it on GitHub: <a href='https://github.com/nubisonline/nubis.com'>nubisonline/nubis.com</a>. I&#8217;ll probably change the repo name to nubisonline/nub.is pretty soon and forget to change this link so if you get a 404 you know what to try next.</p>
+
+<p>First things first: the site was designed to be a one-page site. It&#8217;s pretty hip to have on of those nowawdays so who are we to stay behind? This does raise a few interesting problems though: If your whole site is one page, every visitor will download the entire website on each visit, even if it&#8217;s just to check out the header image. How are you going to make sure that your one page loads fast enough to not cause any annoyance?</p>
+
+<p>There&#8217;s plenty more where those came from. Read on for some of the problems we faced and the solutions that we came up with.</p>
+
+<h1 id='problems'>Problems</h1>
+
+<p>Err, I mean challenges of course, there&#8217;s no such thing as problems. Also synergy, retina and big data.</p>
+
+<h2 id='page_loading_time'>Page loading time</h2>
+
+<p>This was already quite a though one. Our designers picked a few nice photos for the background of the page header. We needed to make sure that these were the first to load without compromising image quality.</p>
+
+<p>Because the site had to work on laptops/desktops (read on for mobile) of all different sizes, there&#8217;s a lot of code that resizes certain elements depending on the size of the users browser window. A few of the elements that need this resizing (the nav bar height and the header height) are visible before the &#8216;fold&#8217;.</p>
+
+<p>Thus, we had to make sure that the code for all visible elements would run as fast as possible but <em>without</em> blocking the loading of the page.</p>
+
+<p>In the end we wrote a couple of CSS rules that set an approximate right size for most elements (and set the right size for a popular browser window size for the elements were an approximation in CSS was impossible). The order of loading is:</p>
+
+<ol>
+<li>The stylesheet</li>
+
+<li>The HTML</li>
+
+<li>The JavsScript (which executes in the order the elements have on the page)</li>
+</ol>
+
+<p>It&#8217;s still not perfect, but the site is pretty snappy now and all images look great.</p>
+
+<h2 id='responsiveness'>Responsiveness</h2>
+
+<p>These days, you just can&#8217;t get away with not having a mobile-compatible site. The best way for a site to be compatible with mobile devices is to make all pages <em>responsive</em>.</p>
+
+<p>That means that the page layout will change based on how large the browser viewport is.</p>
+
+<p>The problem here was that with all the animations our designers came up with, <em>it just wasn&#8217;t possible</em> to use the same base HTML for both desktop and mobile devices. I really did not want to make a separation but after some testing it turned out that even the newest devices were having trouble with the site.</p>
+
+<p>The biggest culprit here is the code that runs every time that you scroll. It&#8217;s there for the parallax effect in the header and the size and active section of the navigation bar.</p>
+
+<p>We played with the idea of adding some extra code that would load the right JS based on the viewport size but that would just make the page load time longer for both desktops and mobile.</p>
+
+<p>After some debating, we split the site into two versions, one for desktop and one for mobile. Which one is served depends on the user agent that the client sends (yuck :(). The good news is that the mobile site (I think of it as a &#8216;light&#8217; version of our site) is fully responsive from the smallest phone to the biggest tablet.</p>
+
+<h2 id='analytics'>Analytics</h2>
+
+<p>Another problem with one page sites is that you can&#8217;t really determine how many views each separate section of the site has had.</p>
+
+<p>Our solution here is to just manually push a page view whenever someone scrolls &#8216;into&#8217; a page. We use Google Analytics and they expose this in their JS API. Sure, it isn&#8217;t perfect, as someone that wants to read our blog will always generate a page view for services, cases and about. But hey, it&#8217;s better than nothing. Our analytics guys agree.</p>
+
+<h2 id='search_engines'>Search engines</h2>
+
+<p>Putting all of your content on one page goes against allmost everything you learn in SEO school. However, Google has gotten pretty smart of the the years and if you use the new semantic HTML5 content tags (which we do, of course), it&#8217;s not that bad.</p>
+
+<p>I&#8217;ll write a separate article on how we set everything up to help Google index our website better soon.</p>
+
+<p>(Note to future self: insert link here)</p>
+
+<h1 id='architecture'>Architecture</h1>
+
+<p>Enough about the difficulties, let&#8217;s talk about how we did it!</p>
+
+<p>As you know by now, the site was split into two pieces with more or less the same content. While we were actively (and hastily!) developing, these two parts were just that: copies with some differences that grew apart as time went by. Of course, this form of coupling is incredibly harmful. If a part of the content changes, you have to make this change at two different places. This becomes an even bigger problem if you want to use the content at yet another place (see my future post about SEO on nub.is for more on that).</p>
+
+<p>As soon as the deadline was past and the initial version of the site went live, I started cleaning up the site. I started looking for a flexible templating system that gave me complete structural freedom, that would just replace some variable with text from a file.</p>
+
+<p>I have quite some experience with Jekyll but since I wasn&#8217;t sure how we would be handling blog posts through the site at that time I tried to find something geared less to blogging. I found a few good frameworks/templates/standards but most of them enforced a certain way of working, something I wasn&#8217;t really comfortable whith since I had most of the HTML finished. After a while I gave up and just went with Jekyll.</p>
+
+<p>I wrote a small <a href='https://github.com/nubisonline/nubis.com/blob/master/_plugins/load_yaml/load_yaml.rb'>plugin</a> that loads in YAML config files and appends them to the global site variable. That way, I didn&#8217;t have to put all of the config in the global <code>_config.yml</code> file, where it doesn&#8217;t belong in my opinion.</p>
+
+<p>It took some cleaning up but I&#8217;m quite happy with the result as it is now (although I&#8217;m still moving some code from client-side JS to precompiled HTML right now). The full and light versions of the site are generated from a different HTML template that use the same content and I managed to import most of out old blog posts to Jekyll.</p>
+
+<h1 id='the_base_html'>The base HTML</h1>
+
+<p>Let&#8217;s back up a bit now. As I mentioned before, we started with the HTML for the full site. The HTML for the mobile site was derived from that and now both of those sets of HTML are generated using a template and content.</p>
+
+<p>Of course, this isn&#8217;t the most efficient way to work on a project but when we started prototyping the deadline suddenly moved closer. You know how these things are :).</p>
+
+<p>We use the HTML5 editor&#8217;s draft, mostly because of the added value of semantic tags like <code>&lt;article&gt;</code> and <code>&lt;section&gt;</code>. For the hexagons, we use SVG clip-paths. These only work in very modern browsers but this way works <em>so</em> much better than any alternative. We&#8217;re considering adding a fallback but our hexes are only for visual/design purposes and they fail quite graciously so it&#8217;s not very nessecary. The photographs next to the quotes also use this technique. (In fact, the photo&#8217;s next to the quotes are actually just the same as the team photo&#8217;s)</p>
+
+<p>You might have noticed the &#8216;parallax&#8217; effect that our header has. This is in fact just a fixed background image with scrollable content placed over it. For added effect, we move the background up with half a pixel for every pixel that the user scrolls down.</p>
+
+<p>&#32;<span itemscope='' itemtype='http://schema.org/Person'><meta content='Remco Plasmeijer' itemprop='name' /><meta content='Systems Architect' itemprop='jobTitle' /><a href='https://plus.google.com/102632274470030995679' itemprop='url'>Remco</a></span> worked on the animations of the hexagons in the services section. These don&#8217;t use a clip-path since that would be a lot harder to animate in this way. He built up the hexagons out of three parts that he animates separately using jQuery to achieve the result that you see.</p>
+
+<p>The map that you see at the very bottom of the page, behind our contact form, is an actual functional Google Map. The color comes from the custom styling that we ue to initialize the map, which is just a saturation of -100.</p>
+
+<h1 id='conclusion'>Conclusion</h1>
+
+<p>And that&#8217;s nub.is! All in all the process was quite hectic but we&#8217;re very happy with the end result, code-wise and looks-wise. If you have any questions, suggestions or hatemail regarding the site, please don&#8217;t hesitate to contact us.</p>
+	</div>
+</article>
+
+          </div>
+        </div> <!-- /container -->
+
+		
+		<a href="https://plus.google.com/111860592124351326118" rel="publisher">Google+</a>
+		<script>
+			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+			})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+			ga('create', 'UA-43461893-1', 'nub.is');
+			ga('send', 'pageview');
+		</script>
+    </body>
+</html>
