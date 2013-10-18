@@ -4,6 +4,7 @@ layout: default
 
 {% assign author = site.authors[page.author] %}
 <article itemscope itemtype="http://schema.org/BlogPosting">
+	<meta itemprop="url" content="{{ site.base_url }}{{ page.url }}">
 	<header>
 		<h1 class="headline" itemprop="name">{{ page.title }}</h1>
 		<div class="byline">
@@ -16,7 +17,7 @@ layout: default
 			on <time itemprop="dateCreated" pubdate datetime="{{ page.date | date: "%Y-%m-%d" }}" title="{{ page.date | date_to_long_string }}">{{ page.date | date_to_string }}</time>
 		</div>
 		<meta itemprop="description" content="{{ page.description }}" />
-		{% if page.image %}<meta itemprop="image" content="{{ site.base_url }}post-imgs/{{ page.image }}" />{% endif %}
+		{% if page.image %}<meta itemprop="image" content="{{ site.base_url }}/post-imgs/{{ page.image }}" />{% endif %}
 	</header>
 
 	<div class="article-content post" itemprop="articleBody">
