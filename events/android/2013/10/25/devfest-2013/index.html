@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>GDG DevFest NL 2013</title>
+        <meta name="viewport" content="width=device-width">
+
+        <!-- syntax highlighting CSS -->
+        <link rel="stylesheet" href="/css/syntax.css">
+
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="/css/main.css">
+
+    </head>
+    <body>
+		<a href="https://github.com/nubisonline/development-blog/blob/source/_posts/2013-10-25-devfest-2013.md"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub"></a>
+	
+        <div class="container">
+          <div class="site">
+            <div class="header">
+              <h1 class="title"><a href="/">Nubis Development</a></h1>
+              <a class="extra" href="/">home</a>
+            </div>
+                
+<article itemscope itemtype="http://schema.org/BlogPosting">
+	<meta itemprop="url" content="http://development.nub.is/events/android/2013/10/25/devfest-2013/">
+	<header>
+		<h1 class="headline" itemprop="name">GDG DevFest NL 2013</h1>
+		<div class="byline">
+			By 
+			<span itemprop="author" itemscope itemtype="http://schema.org/Person">
+				<meta itemprop="jobTitle" content="Senior Developer" />
+				<meta itemprop="name" content="Walid Said" />
+				<a rel="author" href='https://plus.google.com/104993994538898250860/?rel=author' itemprop='url'>Walid Said</a>
+			</span>
+			on <time itemprop="dateCreated" pubdate datetime="2013-10-25" title="25 October 2013">25 Oct 2013</time>
+		</div>
+		<meta itemprop="description" content="my thoughts about DevFest NL" />
+		<meta itemprop="image" content="http://development.nub.is/post-imgs/devfest-2013.png" />
+	</header>
+
+	<div class="article-content post" itemprop="articleBody">
+		<p>On Saturday October 19th, <span itemscope='' itemtype='http://schema.org/Person'><meta content='Tim van Dalen' itemprop='name' /><meta content='Head of Development' itemprop='jobTitle' /><a href='https://plus.google.com/100487696573936783003' itemprop='url'>Tim</a></span>, <span itemscope='' itemtype='http://schema.org/Person'><meta content='Remco Plasmeijer' itemprop='name' /><meta content='Systems Architect' itemprop='jobTitle' /><a href='https://plus.google.com/102632274470030995679' itemprop='url'>Remco</a></span> and I went to GDG DevFest NL.</p>
+
+<p><a href='http://www.devfest.nl/'>DevFest</a> is an event held by: <a href='http://www.dutchaug.org/'>The GDG Dutch Android User Group</a> &amp; <a href='http://www.gdgnl.org/'>GDG Netherlands</a> sponsored by Google and many other companies. It started with a quick introduction about the organization and a little bit about Android. We really liked their ideas about being open source, because we also agree about the fact that you can help someone with your code. However, being helped is possible as well, when you for example get a comment about a security issue. Something you would have missed if your app wasn&#8217;t open source. Fun fact: the first internet connection in Europe was established in The Netherlands, which happened in the same building where the event was being held (Science Park, Amsterdam).</p>
+
+<p>The <a href='http://www.devfest.nl/program/'>program</a> consisted of workshops/code labs and talks. Our schedule was as follows:</p>
+
+<ol>
+<li>App Strategy Workshop</li>
+
+<li>Location Services in Android</li>
+
+<li>How to do network image loading</li>
+
+<li>Android performance quick wins</li>
+</ol>
+
+<h1 id='app_strategy_workshop'>App Strategy Workshop</h1>
+
+<p>The idea behind this workshop was how to create a strategy for an app, which focusses mainly on everything that happens before actually creating the app. The idea about creating different and very detailed personas was pretty new for most of us. Doing this will help you understand your app user which will help you create an app that your targeted personas will enjoy using, with your idea behind it. You&#8217;ll need to make sure that your app (for a mobile phone in this case) is being made so that it uses the functionality of your phone while taking advantage of it at the same time. For example, when comparing a phone with a laptop, you&#8217;ll come to the conclusion that a phone is easier to bring with, has GPS (so you can get quick direction), a camera (scan a barcode) and much more things that will help your users/costumers understand how important this app is for their mobile phone. The code of your app is very important, as we all know. But having a fully functional app won&#8217;t help you at all when having little to no strategy prior to creating the app.</p>
+
+<h1 id='location_services_in_android'>Location Services in Android</h1>
+
+<p>After a lunch break we attended our first talk. After a short talk about the workings of GPS, we got some very interesting and practical examples on how to implement location services in a way that your app functions properly, but respecting your user as well. There&#8217;s for example no need to request a location every 10 seconds when it&#8217;s unnecessary (I&#8217;m looking at you, Facebook), which will lead to something that every mobile user fears: low battery life. We discussed about a lot of ways to avoid this kind of behavior, such as using the last know position in location in LocationManager. I hadn&#8217;t heard of it before, but to simply put it, it just means that instead of asking for a new location, you lookup if another app requested the users location in a timeframe that&#8217;s usable for your app. If the location meets your specific needs than you can go ahead and use that location.</p>
+
+<h1 id='how_to_do_network_image_loading'>How to do network image loading</h1>
+
+<p>This talk was pretty specific, but <span itemscope='' itemtype='http://schema.org/Person'><meta content='Tim van Dalen' itemprop='name' /><meta content='Head of Development' itemprop='jobTitle' /><a href='https://plus.google.com/100487696573936783003' itemprop='url'>Tim</a></span> has been busy with an app called <a href='https://play.google.com/store/apps/details?id=com.timvdalen.gizmooi'>Gizmooi</a>, which does pretty much the same thing. The talk was very structured and named the following 3 methods to load images in your Android application.</p>
+
+<ol>
+<li>Image Handlers</li>
+
+<li><a href='http://square.github.io/picasso/'>Picasso</a></li>
+
+<li><a href='https://developers.google.com/events/io/sessions/325304728'>Volley</a></li>
+</ol>
+
+<p>The first way to do this, is actually the oldest and most difficult way to load images. You&#8217;ll have to take care of your images, caching, updating etc., which is very time consuming.</p>
+
+<p>Picasso will take of everything, just by doing <code>Picasso.with(context).load(&quot;YourImageLink&quot;).into(imageView);</code>. It&#8217;s the must-have library, and I highly recommend it.</p>
+
+<p>Volley goes further than Picasso, and does everything networking related, but very fast (in some cases faster than Picasso, with for example big images). Putting Volley somewhere easy to access will be better, because of the big variety of supported features. You can access it when you need to load an image and then access it from somewhere else to load your JSON.</p>
+
+<h1 id='android_performance_quick_wins'>Android performance quick wins</h1>
+
+<p>This talk was actually about everything that should be done to ensure performance in your app. So things like the smoothness of your app, responsiveness etc. which all will hopefully lead to that 5 star review. Many aspects, mainly related to debugging (like the hierarchy of your app), came up, but their section about the GPU Overdraw tool was the most interesting. Here&#8217;s an <a href='http://www.curious-creature.org/2012/12/01/android-performance-case-study/'>article</a> written by Romain Guy discussing exactly this. Not many developers will look in to the performance part of their app, as long it just works. But I&#8217;m even more convinced now, that by just spending a reasonable amount of time, that you&#8217;re able to win a few more millisecond, making your app even better.</p>
+
+<h1 id='conclusion'>Conclusion</h1>
+
+<p>We had a really fun and informative day. We learned about everything that should go before making an app, implementing features in an efficient way and at the end making sure that everything works smoothly when being used by the user. It was very structured and setup very nicely, especially because it was the first DevFest in the Netherlands. It&#8217;ll hopefully continue to grow in the future, but I&#8217;m pretty positive of this because of the people behind it. The part I really appreciated about the event, was the fact how informal everything was, yet presented in a very informative way. I&#8217;m pretty sure that we&#8217;ll attend DevFest NL again next year, and maybe sponsoring or giving a talk as Nubis.</p>
+	</div>
+</article>
+
+          </div>
+        </div> <!-- /container -->
+
+		
+		<a href="https://plus.google.com/111860592124351326118" rel="publisher">Google+</a>
+		<script>
+			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+			})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+			ga('create', 'UA-43461893-1', 'nub.is');
+			ga('send', 'pageview');
+		</script>
+    </body>
+</html>
