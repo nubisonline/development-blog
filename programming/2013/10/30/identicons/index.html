@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Nubis identicons</title>
+        <meta name="viewport" content="width=device-width">
+
+        <!-- syntax highlighting CSS -->
+        <link rel="stylesheet" href="/css/syntax.css">
+
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="/css/main.css">
+
+    </head>
+    <body>
+		<a href="https://github.com/nubisonline/development-blog/blob/source/_posts/2013-10-30-identicons.md"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub"></a>
+	
+        <div class="container">
+          <div class="site">
+            <div class="header">
+              <h1 class="title"><a href="/">Nubis Development</a></h1>
+              <a class="extra" href="/">home</a>
+            </div>
+                
+<article itemscope itemtype="http://schema.org/BlogPosting">
+	<meta itemprop="url" content="http://development.nub.is/programming/2013/10/30/identicons/">
+	<header>
+		<h1 class="headline" itemprop="name">Nubis identicons</h1>
+		<div class="byline">
+			By 
+			<span itemprop="author" itemscope itemtype="http://schema.org/Person">
+				<meta itemprop="jobTitle" content="Head of Development" />
+				<meta itemprop="name" content="Tim van Dalen" />
+				<a rel="author" href='https://plus.google.com/100487696573936783003/?rel=author' itemprop='url'>Tim van Dalen</a>
+			</span>
+			on <time itemprop="dateCreated" pubdate datetime="2013-10-30" title="30 October 2013">30 Oct 2013</time>
+		</div>
+		<meta itemprop="description" content="" />
+		<meta itemprop="image" content="http://development.nub.is/post-imgs/identicon.png" />
+	</header>
+
+	<div class="article-content post" itemprop="articleBody">
+		<p>Some time ago, GitHub retired the default cat icon and introduced <a href='https://github.com/blog/1586-identicons'>Identicons</a>. While we were working on the <a href='http://nub.is/nonexistent'>nub.is 404 page</a>, <span itemscope='' itemtype='http://schema.org/Person'><meta content='Walid Said' itemprop='name' /><meta content='Senior Developer' itemprop='jobTitle' /><a href='https://plus.google.com/104993994538898250860' itemprop='url'>Walid</a></span> replaced the blocks in his GitHub identicon by Nubis blocks (from our cloud icon) and uploaded it to Gravatar.</p>
+<img alt='Identicon Walid' src='https://identicons.github.com/walidsaid.png' style='width: 48%; margin: 0.5%;' /><img alt='Gravatar Walid' src='https://2.gravatar.com/avatar/54358d53ae6b7e695b63201f3af554bb?d=https%3A%2F%2Fidenticons.github.com%2Ff477d49569195dd32c8c71edb4feba06.png&amp;r=x&amp;s=400' style='width: 48%; margin: 0.5%;' />
+<p>That (and the fact that we just got a new server by WebFaction, which I might blog about later) inspired me to make Nubis identicons.</p>
+
+<p>They work similar to gravatar, in that you first get a hash for your user name and can then request an icon for your hash. Of course, I had to one-up GitHub, so our identicons are 3D! (This might also be because the blocks are identicons)</p>
+
+<p>You can check out the <a href='https://github.com/nubisonline/identicons'>full source code on GitHub</a>, but here are the highlights. I have two classes, <code>Identicon</code> and <code>Icon</code>. <code>Icon</code> represents an actual image, in Imagemagick. <code>Identicon</code> represents the identicon.</p>
+
+<p>I chose to use Sinatra to handle the HTTP, which is beautifully succinct:</p>
+<div class='highlight'><pre><code class='ruby'><span class='n'>get</span> <span class='s1'>&#39;/:hash.png&#39;</span><span class='p'>,</span> <span class='ss'>:provides</span> <span class='o'>=&gt;</span> <span class='ss'>:png</span> <span class='k'>do</span> <span class='o'>|</span><span class='nb'>hash</span><span class='o'>|</span>
+	<span class='n'>icon</span> <span class='o'>=</span> <span class='ss'>Identicon</span><span class='p'>:</span><span class='ss'>:from_hash</span> <span class='nb'>hash</span>
+
+	<span class='n'>icon</span><span class='o'>.</span><span class='n'>to_png</span>
+<span class='k'>end</span>
+
+<span class='n'>get</span> <span class='s1'>&#39;/:hash.coords&#39;</span><span class='p'>,</span> <span class='ss'>:provides</span> <span class='o'>=&gt;</span> <span class='ss'>:text</span> <span class='k'>do</span> <span class='o'>|</span><span class='nb'>hash</span><span class='o'>|</span>
+	<span class='n'>icon</span> <span class='o'>=</span> <span class='ss'>Identicon</span><span class='p'>:</span><span class='ss'>:from_hash</span> <span class='nb'>hash</span>
+
+	<span class='n'>icon</span><span class='o'>.</span><span class='n'>to_coord</span>
+<span class='k'>end</span>
+
+<span class='n'>get</span> <span class='s1'>&#39;/:hash.json&#39;</span><span class='p'>,</span> <span class='ss'>:provides</span> <span class='o'>=&gt;</span> <span class='ss'>:json</span> <span class='k'>do</span> <span class='o'>|</span><span class='nb'>hash</span><span class='o'>|</span>
+	<span class='n'>icon</span> <span class='o'>=</span> <span class='ss'>Identicon</span><span class='p'>:</span><span class='ss'>:from_hash</span> <span class='nb'>hash</span>
+
+	<span class='n'>icon</span><span class='o'>.</span><span class='n'>to_a</span><span class='o'>.</span><span class='n'>to_json</span>
+<span class='k'>end</span>
+
+<span class='n'>get</span> <span class='s1'>&#39;/:name&#39;</span> <span class='k'>do</span> <span class='o'>|</span><span class='nb'>name</span><span class='o'>|</span>
+	<span class='n'>icon</span> <span class='o'>=</span> <span class='no'>Identicon</span><span class='o'>.</span><span class='n'>new</span> <span class='nb'>name</span>
+
+	<span class='n'>icon</span><span class='o'>.</span><span class='n'>to_hash</span>
+<span class='k'>end</span>
+</code></pre></div>
+<p>As you can see, HTTP methods map to model methods quite clean-ly.</p>
+
+<p>Practically, our icons probably aren&#8217;t great because of collisions. I reduce the SHA-2 (which is quite collision-proof) hash which has 256 bits of data to 64 bits of data (the 64 blocks in the picture). Furthermore, some icons will not be distinguishable from each other because of the way you look at them.</p>
+
+<p>But hey, the pictures are kind of pretty!</p>
+<img alt='N' src='http://id.nub.is/aaaa00000000000000aa0000000000000a00000000000000aaaa000000000000.png' style='width: 11em;' /><img alt='U' src='http://id.nub.is/aaaa000000000000a000000000000000a000000000000000aaaa000000000000.png' style='width: 11em;' /><img alt='B' src='http://id.nub.is/aaaa000000000000a0a0000000000000aaa00000000000000000000000000000.png' style='width: 11em;' /><img alt='I' src='http://id.nub.is/aaaa000000000000000000000000000000000000000000000000000000000000.png' style='width: 11em;' /><img alt='S' src='http://id.nub.is/aaaa000000000000aa0a000000000000aa0a000000000000aa0a000000000000.png' style='width: 11em;' />
+	</div>
+</article>
+
+          </div>
+        </div> <!-- /container -->
+
+		
+		<a href="https://plus.google.com/111860592124351326118" rel="publisher">Google+</a>
+		<script>
+			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+			})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+			ga('create', 'UA-43461893-1', 'nub.is');
+			ga('send', 'pageview');
+		</script>
+    </body>
+</html>
