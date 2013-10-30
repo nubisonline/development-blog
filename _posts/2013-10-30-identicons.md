@@ -5,14 +5,14 @@ title: Nubis identicons
 categories: programming
 tags: [identicons, nubis]
 image: identicon.png
-excerpt: "<p>Some time ago, GitHub retired the default cat icon and introduced <a href='https://github.com/blog/1586-identicons'>Identicons</a>. While we were working on the <a href='http://nub.is/nonexistent'>nub.is 404 page</a>, <span itemscope itemtype='http://schema.org/Person'><meta content='Walid Said' itemprop='name'><meta content='Senior Developer' itemprop='jobTitle'><a href='https://plus.google.com/104993994538898250860' itemprop='url'>Walid</a></span> replaced the blocks in his GitHub identicon by Nubis blocks (from our cloud icon) and uploaded it to Gravatar. That (and the fact that we just got a new server by WebFaction, which I might blog about later) inspired me to make Nubis identicons.</p>
+excerpt: "<p>Some time ago, GitHub retired the default cat icon and introduced <a href='https://github.com/blog/1586-identicons'>Identicons</a>. While we were working on the <a href='http://nub.is/nonexistent'>nub.is 404 page</a>, <span itemscope itemtype='http://schema.org/Person'><meta content='Walid Said' itemprop='name'><meta content='Senior Developer' itemprop='jobTitle'><a href='https://plus.google.com/104993994538898250860' itemprop='url'>Walid</a></span> replaced the blocks in his GitHub identicon by Nubis blocks (from our cloud icon) and uploaded it to Gravatar. That (and the fact that we just got a new server by WebFaction, which I might blog about later) inspired me to make Nubis identicons.</p>"
 ---
 
 Some time ago, GitHub retired the default cat icon and introduced [Identicons](https://github.com/blog/1586-identicons).
 While we were working on the [nub.is 404 page](http://nub.is/nonexistent), {% mention walid %} replaced the blocks in his GitHub identicon by Nubis blocks (from our cloud icon) and uploaded it to Gravatar.
 
-<img alt="Identicon Walid" src="https://identicons.github.com/walidsaid.png" style="width: 48%">
-<img alt="Gravatar Walid" src="https://2.gravatar.com/avatar/54358d53ae6b7e695b63201f3af554bb?d=https%3A%2F%2Fidenticons.github.com%2Ff477d49569195dd32c8c71edb4feba06.png&r=x&s=400" style="width: 48%">
+<img alt="Identicon Walid" src="https://identicons.github.com/walidsaid.png" style="width: 48%; margin: 0.5%;">
+<img alt="Gravatar Walid" src="https://2.gravatar.com/avatar/54358d53ae6b7e695b63201f3af554bb?d=https%3A%2F%2Fidenticons.github.com%2Ff477d49569195dd32c8c71edb4feba06.png&amp;r=x&amp;s=400" style="width: 48%; margin: 0.5%;">
 
 That (and the fact that we just got a new server by WebFaction, which I might blog about later) inspired me to make Nubis identicons.
 
