@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+        <channel>
+                <title>Nubis Development</title>
+                <description>Young, enthusiastic development team with a passion for anything new.</description>
+                <link>http://development.nub.is</link>
+                <atom:link href="http://development.nub.is/feed.xml" rel="self" type="application/rss+xml" />
+                
+                        <item>
+                                <title>Nubis identicons</title>
+                                <description>&lt;p&gt;Some time ago, GitHub retired the default cat icon and introduced &lt;a href=&#39;https://github.com/blog/1586-identicons&#39;&gt;Identicons&lt;/a&gt;. While we were working on the &lt;a href=&#39;http://nub.is/nonexistent&#39;&gt;nub.is 404 page&lt;/a&gt;, &lt;span itemscope=&#39;&#39; itemtype=&#39;http://schema.org/Person&#39;&gt;&lt;meta content=&#39;Walid Said&#39; itemprop=&#39;name&#39; /&gt;&lt;meta content=&#39;Senior Developer&#39; itemprop=&#39;jobTitle&#39; /&gt;&lt;a href=&#39;https://plus.google.com/104993994538898250860&#39; itemprop=&#39;url&#39;&gt;Walid&lt;/a&gt;&lt;/span&gt; replaced the blocks in his GitHub identicon by Nubis blocks (from our cloud icon) and uploaded it to Gravatar.&lt;/p&gt;
+&lt;img alt=&#39;Identicon Walid&#39; src=&#39;https://identicons.github.com/walidsaid.png&#39; style=&#39;width: 48%; margin: 0.5%;&#39; /&gt;&lt;img alt=&#39;Gravatar Walid&#39; src=&#39;https://2.gravatar.com/avatar/54358d53ae6b7e695b63201f3af554bb?d=https%3A%2F%2Fidenticons.github.com%2Ff477d49569195dd32c8c71edb4feba06.png&amp;amp;r=x&amp;amp;s=400&#39; style=&#39;width: 48%; margin: 0.5%;&#39; /&gt;
+&lt;p&gt;That (and the fact that we just got a new server by WebFaction, which I might blog about later) inspired me to make Nubis identicons.&lt;/p&gt;
+
+&lt;p&gt;They work similar to gravatar, in that you first get a hash for your user name and can then request an icon for your hash. Of course, I had to one-up GitHub, so our identicons are 3D! (This might also be because the blocks are identicons)&lt;/p&gt;
+
+&lt;p&gt;You can check out the &lt;a href=&#39;https://github.com/nubisonline/identicons&#39;&gt;full source code on GitHub&lt;/a&gt;, but here are the highlights. I have two classes, &lt;code&gt;Identicon&lt;/code&gt; and &lt;code&gt;Icon&lt;/code&gt;. &lt;code&gt;Icon&lt;/code&gt; represents an actual image, in Imagemagick. &lt;code&gt;Identicon&lt;/code&gt; represents the identicon.&lt;/p&gt;
+
+&lt;p&gt;I chose to use Sinatra to handle the HTTP, which is beautifully succinct:&lt;/p&gt;
+&lt;div class=&#39;highlight&#39;&gt;&lt;pre&gt;&lt;code class=&#39;ruby&#39;&gt;&lt;span class=&#39;n&#39;&gt;get&lt;/span&gt; &lt;span class=&#39;s1&#39;&gt;&amp;#39;/:hash.png&amp;#39;&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;,&lt;/span&gt; &lt;span class=&#39;ss&#39;&gt;:provides&lt;/span&gt; &lt;span class=&#39;o&#39;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#39;ss&#39;&gt;:png&lt;/span&gt; &lt;span class=&#39;k&#39;&gt;do&lt;/span&gt; &lt;span class=&#39;o&#39;&gt;|&lt;/span&gt;&lt;span class=&#39;nb&#39;&gt;hash&lt;/span&gt;&lt;span class=&#39;o&#39;&gt;|&lt;/span&gt;
+	&lt;span class=&#39;n&#39;&gt;icon&lt;/span&gt; &lt;span class=&#39;o&#39;&gt;=&lt;/span&gt; &lt;span class=&#39;ss&#39;&gt;Identicon&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;:&lt;/span&gt;&lt;span class=&#39;ss&#39;&gt;:from_hash&lt;/span&gt; &lt;span class=&#39;nb&#39;&gt;hash&lt;/span&gt;
+
+	&lt;span class=&#39;n&#39;&gt;icon&lt;/span&gt;&lt;span class=&#39;o&#39;&gt;.&lt;/span&gt;&lt;span class=&#39;n&#39;&gt;to_png&lt;/span&gt;
+&lt;span class=&#39;k&#39;&gt;end&lt;/span&gt;
+
+&lt;span class=&#39;n&#39;&gt;get&lt;/span&gt; &lt;span class=&#39;s1&#39;&gt;&amp;#39;/:hash.coords&amp;#39;&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;,&lt;/span&gt; &lt;span class=&#39;ss&#39;&gt;:provides&lt;/span&gt; &lt;span class=&#39;o&#39;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#39;ss&#39;&gt;:text&lt;/span&gt; &lt;span class=&#39;k&#39;&gt;do&lt;/span&gt; &lt;span class=&#39;o&#39;&gt;|&lt;/span&gt;&lt;span class=&#39;nb&#39;&gt;hash&lt;/span&gt;&lt;span class=&#39;o&#39;&gt;|&lt;/span&gt;
+	&lt;span class=&#39;n&#39;&gt;icon&lt;/span&gt; &lt;span class=&#39;o&#39;&gt;=&lt;/span&gt; &lt;span class=&#39;ss&#39;&gt;Identicon&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;:&lt;/span&gt;&lt;span class=&#39;ss&#39;&gt;:from_hash&lt;/span&gt; &lt;span class=&#39;nb&#39;&gt;hash&lt;/span&gt;
+
+	&lt;span class=&#39;n&#39;&gt;icon&lt;/span&gt;&lt;span class=&#39;o&#39;&gt;.&lt;/span&gt;&lt;span class=&#39;n&#39;&gt;to_coord&lt;/span&gt;
+&lt;span class=&#39;k&#39;&gt;end&lt;/span&gt;
+
+&lt;span class=&#39;n&#39;&gt;get&lt;/span&gt; &lt;span class=&#39;s1&#39;&gt;&amp;#39;/:hash.json&amp;#39;&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;,&lt;/span&gt; &lt;span class=&#39;ss&#39;&gt;:provides&lt;/span&gt; &lt;span class=&#39;o&#39;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#39;ss&#39;&gt;:json&lt;/span&gt; &lt;span class=&#39;k&#39;&gt;do&lt;/span&gt; &lt;span class=&#39;o&#39;&gt;|&lt;/span&gt;&lt;span class=&#39;nb&#39;&gt;hash&lt;/span&gt;&lt;span class=&#39;o&#39;&gt;|&lt;/span&gt;
+	&lt;span class=&#39;n&#39;&gt;icon&lt;/span&gt; &lt;span class=&#39;o&#39;&gt;=&lt;/span&gt; &lt;span class=&#39;ss&#39;&gt;Identicon&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;:&lt;/span&gt;&lt;span class=&#39;ss&#39;&gt;:from_hash&lt;/span&gt; &lt;span class=&#39;nb&#39;&gt;hash&lt;/span&gt;
+
+	&lt;span class=&#39;n&#39;&gt;icon&lt;/span&gt;&lt;span class=&#39;o&#39;&gt;.&lt;/span&gt;&lt;span class=&#39;n&#39;&gt;to_a&lt;/span&gt;&lt;span class=&#39;o&#39;&gt;.&lt;/span&gt;&lt;span class=&#39;n&#39;&gt;to_json&lt;/span&gt;
+&lt;span class=&#39;k&#39;&gt;end&lt;/span&gt;
+
+&lt;span class=&#39;n&#39;&gt;get&lt;/span&gt; &lt;span class=&#39;s1&#39;&gt;&amp;#39;/:name&amp;#39;&lt;/span&gt; &lt;span class=&#39;k&#39;&gt;do&lt;/span&gt; &lt;span class=&#39;o&#39;&gt;|&lt;/span&gt;&lt;span class=&#39;nb&#39;&gt;name&lt;/span&gt;&lt;span class=&#39;o&#39;&gt;|&lt;/span&gt;
+	&lt;span class=&#39;n&#39;&gt;icon&lt;/span&gt; &lt;span class=&#39;o&#39;&gt;=&lt;/span&gt; &lt;span class=&#39;no&#39;&gt;Identicon&lt;/span&gt;&lt;span class=&#39;o&#39;&gt;.&lt;/span&gt;&lt;span class=&#39;n&#39;&gt;new&lt;/span&gt; &lt;span class=&#39;nb&#39;&gt;name&lt;/span&gt;
+
+	&lt;span class=&#39;n&#39;&gt;icon&lt;/span&gt;&lt;span class=&#39;o&#39;&gt;.&lt;/span&gt;&lt;span class=&#39;n&#39;&gt;to_hash&lt;/span&gt;
+&lt;span class=&#39;k&#39;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;As you can see, HTTP methods map to model methods quite clean-ly.&lt;/p&gt;
+
+&lt;p&gt;Practically, our icons probably aren&amp;#8217;t great because of collisions. I reduce the SHA-2 (which is quite collision-proof) hash which has 256 bits of data to 64 bits of data (the 64 blocks in the picture). Furthermore, some icons will not be distinguishable from each other because of the way you look at them.&lt;/p&gt;
+
+&lt;p&gt;But hey, the pictures are kind of pretty!&lt;/p&gt;
+&lt;img alt=&#39;N&#39; src=&#39;http://id.nub.is/aaaa00000000000000aa0000000000000a00000000000000aaaa000000000000.png&#39; style=&#39;width: 11em;&#39; /&gt;&lt;img alt=&#39;U&#39; src=&#39;http://id.nub.is/aaaa000000000000a000000000000000a000000000000000aaaa000000000000.png&#39; style=&#39;width: 11em;&#39; /&gt;&lt;img alt=&#39;B&#39; src=&#39;http://id.nub.is/aaaa000000000000a0a0000000000000aaa00000000000000000000000000000.png&#39; style=&#39;width: 11em;&#39; /&gt;&lt;img alt=&#39;I&#39; src=&#39;http://id.nub.is/aaaa000000000000000000000000000000000000000000000000000000000000.png&#39; style=&#39;width: 11em;&#39; /&gt;&lt;img alt=&#39;S&#39; src=&#39;http://id.nub.is/aaaa000000000000aa0a000000000000aa0a000000000000aa0a000000000000.png&#39; style=&#39;width: 11em;&#39; /&gt;</description>
+                                <pubDate>Wed, 30 Oct 2013 00:00:00 +0100</pubDate>
+                                <link>http://development.nub.is/programming/2013/10/30/identicons/</link>
+                                <guid isPermaLink="true">http://development.nub.is/programming/2013/10/30/identicons/</guid>
+								<author>Tim van Dalen</author>
+                        </item>
+                
+                        <item>
+                                <title>GDG DevFest NL 2013</title>
+                                <description>&lt;p&gt;On Saturday October 19th, &lt;span itemscope=&#39;&#39; itemtype=&#39;http://schema.org/Person&#39;&gt;&lt;meta content=&#39;Tim van Dalen&#39; itemprop=&#39;name&#39; /&gt;&lt;meta content=&#39;Head of Development&#39; itemprop=&#39;jobTitle&#39; /&gt;&lt;a href=&#39;https://plus.google.com/100487696573936783003&#39; itemprop=&#39;url&#39;&gt;Tim&lt;/a&gt;&lt;/span&gt;, &lt;span itemscope=&#39;&#39; itemtype=&#39;http://schema.org/Person&#39;&gt;&lt;meta content=&#39;Remco Plasmeijer&#39; itemprop=&#39;name&#39; /&gt;&lt;meta content=&#39;Systems Architect&#39; itemprop=&#39;jobTitle&#39; /&gt;&lt;a href=&#39;https://plus.google.com/102632274470030995679&#39; itemprop=&#39;url&#39;&gt;Remco&lt;/a&gt;&lt;/span&gt; and I went to GDG DevFest NL.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#39;http://www.devfest.nl/&#39;&gt;DevFest&lt;/a&gt; is an event held by: &lt;a href=&#39;http://www.dutchaug.org/&#39;&gt;The GDG Dutch Android User Group&lt;/a&gt; &amp;amp; &lt;a href=&#39;http://www.gdgnl.org/&#39;&gt;GDG Netherlands&lt;/a&gt; sponsored by Google and many other companies. It started with a quick introduction about the organization and a little bit about Android. We really liked their ideas about being open source, because we also agree about the fact that you can help someone with your code. However, being helped is possible as well, when you for example get a comment about a security issue. Something you would have missed if your app wasn&amp;#8217;t open source. Fun fact: the first internet connection in Europe was established in The Netherlands, which happened in the same building where the event was being held (Science Park, Amsterdam).&lt;/p&gt;
+
+&lt;p&gt;The &lt;a href=&#39;http://www.devfest.nl/program/&#39;&gt;program&lt;/a&gt; consisted of workshops/code labs and talks. Our schedule was as follows:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;App Strategy Workshop&lt;/li&gt;
+
+&lt;li&gt;Location Services in Android&lt;/li&gt;
+
+&lt;li&gt;How to do network image loading&lt;/li&gt;
+
+&lt;li&gt;Android performance quick wins&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h1 id=&#39;app_strategy_workshop&#39;&gt;App Strategy Workshop&lt;/h1&gt;
+
+&lt;p&gt;The idea behind this workshop was how to create a strategy for an app, which focusses mainly on everything that happens before actually creating the app. The idea about creating different and very detailed personas was pretty new for most of us. Doing this will help you understand your app user which will help you create an app that your targeted personas will enjoy using, with your idea behind it. You&amp;#8217;ll need to make sure that your app (for a mobile phone in this case) is being made so that it uses the functionality of your phone while taking advantage of it at the same time. For example, when comparing a phone with a laptop, you&amp;#8217;ll come to the conclusion that a phone is easier to bring with, has GPS (so you can get quick direction), a camera (scan a barcode) and much more things that will help your users/costumers understand how important this app is for their mobile phone. The code of your app is very important, as we all know. But having a fully functional app won&amp;#8217;t help you at all when having little to no strategy prior to creating the app.&lt;/p&gt;
+
+&lt;h1 id=&#39;location_services_in_android&#39;&gt;Location Services in Android&lt;/h1&gt;
+
+&lt;p&gt;After a lunch break we attended our first talk. After a short talk about the workings of GPS, we got some very interesting and practical examples on how to implement location services in a way that your app functions properly, but respecting your user as well. There&amp;#8217;s for example no need to request a location every 10 seconds when it&amp;#8217;s unnecessary (I&amp;#8217;m looking at you, Facebook), which will lead to something that every mobile user fears: low battery life. We discussed about a lot of ways to avoid this kind of behavior, such as using the last know position in location in LocationManager. I hadn&amp;#8217;t heard of it before, but to simply put it, it just means that instead of asking for a new location, you lookup if another app requested the users location in a timeframe that&amp;#8217;s usable for your app. If the location meets your specific needs than you can go ahead and use that location.&lt;/p&gt;
+
+&lt;h1 id=&#39;how_to_do_network_image_loading&#39;&gt;How to do network image loading&lt;/h1&gt;
+
+&lt;p&gt;This talk was pretty specific, but &lt;span itemscope=&#39;&#39; itemtype=&#39;http://schema.org/Person&#39;&gt;&lt;meta content=&#39;Tim van Dalen&#39; itemprop=&#39;name&#39; /&gt;&lt;meta content=&#39;Head of Development&#39; itemprop=&#39;jobTitle&#39; /&gt;&lt;a href=&#39;https://plus.google.com/100487696573936783003&#39; itemprop=&#39;url&#39;&gt;Tim&lt;/a&gt;&lt;/span&gt; has been busy with an app called &lt;a href=&#39;https://play.google.com/store/apps/details?id=com.timvdalen.gizmooi&#39;&gt;Gizmooi&lt;/a&gt;, which does pretty much the same thing. The talk was very structured and named the following 3 methods to load images in your Android application.&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Image Handlers&lt;/li&gt;
+
+&lt;li&gt;&lt;a href=&#39;http://square.github.io/picasso/&#39;&gt;Picasso&lt;/a&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;a href=&#39;https://developers.google.com/events/io/sessions/325304728&#39;&gt;Volley&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;The first way to do this, is actually the oldest and most difficult way to load images. You&amp;#8217;ll have to take care of your images, caching, updating etc., which is very time consuming.&lt;/p&gt;
+
+&lt;p&gt;Picasso will take of everything, just by doing &lt;code&gt;Picasso.with(context).load(&amp;quot;YourImageLink&amp;quot;).into(imageView);&lt;/code&gt;. It&amp;#8217;s the must-have library, and I highly recommend it.&lt;/p&gt;
+
+&lt;p&gt;Volley goes further than Picasso, and does everything networking related, but very fast (in some cases faster than Picasso, with for example big images). Putting Volley somewhere easy to access will be better, because of the big variety of supported features. You can access it when you need to load an image and then access it from somewhere else to load your JSON.&lt;/p&gt;
+
+&lt;h1 id=&#39;android_performance_quick_wins&#39;&gt;Android performance quick wins&lt;/h1&gt;
+
+&lt;p&gt;This talk was actually about everything that should be done to ensure performance in your app. So things like the smoothness of your app, responsiveness etc. which all will hopefully lead to that 5 star review. Many aspects, mainly related to debugging (like the hierarchy of your app), came up, but their section about the GPU Overdraw tool was the most interesting. Here&amp;#8217;s an &lt;a href=&#39;http://www.curious-creature.org/2012/12/01/android-performance-case-study/&#39;&gt;article&lt;/a&gt; written by Romain Guy discussing exactly this. Not many developers will look in to the performance part of their app, as long it just works. But I&amp;#8217;m even more convinced now, that by just spending a reasonable amount of time, that you&amp;#8217;re able to win a few more millisecond, making your app even better.&lt;/p&gt;
+
+&lt;h1 id=&#39;conclusion&#39;&gt;Conclusion&lt;/h1&gt;
+
+&lt;p&gt;We had a really fun and informative day. We learned about everything that should go before making an app, implementing features in an efficient way and at the end making sure that everything works smoothly when being used by the user. It was very structured and setup very nicely, especially because it was the first DevFest in the Netherlands. It&amp;#8217;ll hopefully continue to grow in the future, but I&amp;#8217;m pretty positive of this because of the people behind it. The part I really appreciated about the event, was the fact how informal everything was, yet presented in a very informative way. I&amp;#8217;m pretty sure that we&amp;#8217;ll attend DevFest NL again next year, and maybe sponsoring or giving a talk as Nubis.&lt;/p&gt;</description>
+                                <pubDate>Fri, 25 Oct 2013 00:00:00 +0200</pubDate>
+                                <link>http://development.nub.is/events/android/2013/10/25/devfest-2013/</link>
+                                <guid isPermaLink="true">http://development.nub.is/events/android/2013/10/25/devfest-2013/</guid>
+								<author>Walid Said</author>
+                        </item>
+                
+                        <item>
+                                <title>Building the new Nubis site</title>
+                                <description>&lt;p&gt;You may have noticed that Nubis has launched a new shiny website recently, on a new shiny domain: &lt;a href=&#39;http://nub.is&#39;&gt;nub.is&lt;/a&gt; In this post, I&amp;#8217;ll list some of the technologies that we used to build the new site and some of the problems that we encountered.&lt;/p&gt;
+
+&lt;p&gt;If you&amp;#8217;re interested in the code, you can find it on GitHub: &lt;a href=&#39;https://github.com/nubisonline/nubis.com&#39;&gt;nubisonline/nubis.com&lt;/a&gt;. I&amp;#8217;ll probably change the repo name to nubisonline/nub.is pretty soon and forget to change this link so if you get a 404 you know what to try next.&lt;/p&gt;
+
+&lt;p&gt;First things first: the site was designed to be a one-page site. It&amp;#8217;s pretty hip to have on of those nowawdays so who are we to stay behind? This does raise a few interesting problems though: If your whole site is one page, every visitor will download the entire website on each visit, even if it&amp;#8217;s just to check out the header image. How are you going to make sure that your one page loads fast enough to not cause any annoyance?&lt;/p&gt;
+
+&lt;p&gt;There&amp;#8217;s plenty more where those came from. Read on for some of the problems we faced and the solutions that we came up with.&lt;/p&gt;
+
+&lt;h1 id=&#39;problems&#39;&gt;Problems&lt;/h1&gt;
+
+&lt;p&gt;Err, I mean challenges of course, there&amp;#8217;s no such thing as problems. Also synergy, retina and big data.&lt;/p&gt;
+
+&lt;h2 id=&#39;page_loading_time&#39;&gt;Page loading time&lt;/h2&gt;
+
+&lt;p&gt;This was already quite a though one. Our designers picked a few nice photos for the background of the page header. We needed to make sure that these were the first to load without compromising image quality.&lt;/p&gt;
+
+&lt;p&gt;Because the site had to work on laptops/desktops (read on for mobile) of all different sizes, there&amp;#8217;s a lot of code that resizes certain elements depending on the size of the users browser window. A few of the elements that need this resizing (the nav bar height and the header height) are visible before the &amp;#8216;fold&amp;#8217;.&lt;/p&gt;
+
+&lt;p&gt;Thus, we had to make sure that the code for all visible elements would run as fast as possible but &lt;em&gt;without&lt;/em&gt; blocking the loading of the page.&lt;/p&gt;
+
+&lt;p&gt;In the end we wrote a couple of CSS rules that set an approximate right size for most elements (and set the right size for a popular browser window size for the elements were an approximation in CSS was impossible). The order of loading is:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;The stylesheet&lt;/li&gt;
+
+&lt;li&gt;The HTML&lt;/li&gt;
+
+&lt;li&gt;The JavsScript (which executes in the order the elements have on the page)&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;It&amp;#8217;s still not perfect, but the site is pretty snappy now and all images look great.&lt;/p&gt;
+
+&lt;h2 id=&#39;responsiveness&#39;&gt;Responsiveness&lt;/h2&gt;
+
+&lt;p&gt;These days, you just can&amp;#8217;t get away with not having a mobile-compatible site. The best way for a site to be compatible with mobile devices is to make all pages &lt;em&gt;responsive&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;That means that the page layout will change based on how large the browser viewport is.&lt;/p&gt;
+
+&lt;p&gt;The problem here was that with all the animations our designers came up with, &lt;em&gt;it just wasn&amp;#8217;t possible&lt;/em&gt; to use the same base HTML for both desktop and mobile devices. I really did not want to make a separation but after some testing it turned out that even the newest devices were having trouble with the site.&lt;/p&gt;
+
+&lt;p&gt;The biggest culprit here is the code that runs every time that you scroll. It&amp;#8217;s there for the parallax effect in the header and the size and active section of the navigation bar.&lt;/p&gt;
+
+&lt;p&gt;We played with the idea of adding some extra code that would load the right JS based on the viewport size but that would just make the page load time longer for both desktops and mobile.&lt;/p&gt;
+
+&lt;p&gt;After some debating, we split the site into two versions, one for desktop and one for mobile. Which one is served depends on the user agent that the client sends (yuck :(). The good news is that the mobile site (I think of it as a &amp;#8216;light&amp;#8217; version of our site) is fully responsive from the smallest phone to the biggest tablet.&lt;/p&gt;
+
+&lt;h2 id=&#39;analytics&#39;&gt;Analytics&lt;/h2&gt;
+
+&lt;p&gt;Another problem with one page sites is that you can&amp;#8217;t really determine how many views each separate section of the site has had.&lt;/p&gt;
+
+&lt;p&gt;Our solution here is to just manually push a page view whenever someone scrolls &amp;#8216;into&amp;#8217; a page. We use Google Analytics and they expose this in their JS API. Sure, it isn&amp;#8217;t perfect, as someone that wants to read our blog will always generate a page view for services, cases and about. But hey, it&amp;#8217;s better than nothing. Our analytics guys agree.&lt;/p&gt;
+
+&lt;h2 id=&#39;search_engines&#39;&gt;Search engines&lt;/h2&gt;
+
+&lt;p&gt;Putting all of your content on one page goes against allmost everything you learn in SEO school. However, Google has gotten pretty smart of the the years and if you use the new semantic HTML5 content tags (which we do, of course), it&amp;#8217;s not that bad.&lt;/p&gt;
+
+&lt;p&gt;I&amp;#8217;ll write a separate article on how we set everything up to help Google index our website better soon.&lt;/p&gt;
+
+&lt;p&gt;(Note to future self: insert link here)&lt;/p&gt;
+
+&lt;h1 id=&#39;architecture&#39;&gt;Architecture&lt;/h1&gt;
+
+&lt;p&gt;Enough about the difficulties, let&amp;#8217;s talk about how we did it!&lt;/p&gt;
+
+&lt;p&gt;As you know by now, the site was split into two pieces with more or less the same content. While we were actively (and hastily!) developing, these two parts were just that: copies with some differences that grew apart as time went by. Of course, this form of coupling is incredibly harmful. If a part of the content changes, you have to make this change at two different places. This becomes an even bigger problem if you want to use the content at yet another place (see my future post about SEO on nub.is for more on that).&lt;/p&gt;
+
+&lt;p&gt;As soon as the deadline was past and the initial version of the site went live, I started cleaning up the site. I started looking for a flexible templating system that gave me complete structural freedom, that would just replace some variable with text from a file.&lt;/p&gt;
+
+&lt;p&gt;I have quite some experience with Jekyll but since I wasn&amp;#8217;t sure how we would be handling blog posts through the site at that time I tried to find something geared less to blogging. I found a few good frameworks/templates/standards but most of them enforced a certain way of working, something I wasn&amp;#8217;t really comfortable whith since I had most of the HTML finished. After a while I gave up and just went with Jekyll.&lt;/p&gt;
+
+&lt;p&gt;I wrote a small &lt;a href=&#39;https://github.com/nubisonline/nubis.com/blob/master/_plugins/load_yaml/load_yaml.rb&#39;&gt;plugin&lt;/a&gt; that loads in YAML config files and appends them to the global site variable. That way, I didn&amp;#8217;t have to put all of the config in the global &lt;code&gt;_config.yml&lt;/code&gt; file, where it doesn&amp;#8217;t belong in my opinion.&lt;/p&gt;
+
+&lt;p&gt;It took some cleaning up but I&amp;#8217;m quite happy with the result as it is now (although I&amp;#8217;m still moving some code from client-side JS to precompiled HTML right now). The full and light versions of the site are generated from a different HTML template that use the same content and I managed to import most of out old blog posts to Jekyll.&lt;/p&gt;
+
+&lt;h1 id=&#39;the_base_html&#39;&gt;The base HTML&lt;/h1&gt;
+
+&lt;p&gt;Let&amp;#8217;s back up a bit now. As I mentioned before, we started with the HTML for the full site. The HTML for the mobile site was derived from that and now both of those sets of HTML are generated using a template and content.&lt;/p&gt;
+
+&lt;p&gt;Of course, this isn&amp;#8217;t the most efficient way to work on a project but when we started prototyping the deadline suddenly moved closer. You know how these things are :).&lt;/p&gt;
+
+&lt;p&gt;We use the HTML5 editor&amp;#8217;s draft, mostly because of the added value of semantic tags like &lt;code&gt;&amp;lt;article&amp;gt;&lt;/code&gt; and &lt;code&gt;&amp;lt;section&amp;gt;&lt;/code&gt;. For the hexagons, we use SVG clip-paths. These only work in very modern browsers but this way works &lt;em&gt;so&lt;/em&gt; much better than any alternative. We&amp;#8217;re considering adding a fallback but our hexes are only for visual/design purposes and they fail quite graciously so it&amp;#8217;s not very nessecary. The photographs next to the quotes also use this technique. (In fact, the photo&amp;#8217;s next to the quotes are actually just the same as the team photo&amp;#8217;s)&lt;/p&gt;
+
+&lt;p&gt;You might have noticed the &amp;#8216;parallax&amp;#8217; effect that our header has. This is in fact just a fixed background image with scrollable content placed over it. For added effect, we move the background up with half a pixel for every pixel that the user scrolls down.&lt;/p&gt;
+
+&lt;p&gt;&amp;#32;&lt;span itemscope=&#39;&#39; itemtype=&#39;http://schema.org/Person&#39;&gt;&lt;meta content=&#39;Remco Plasmeijer&#39; itemprop=&#39;name&#39; /&gt;&lt;meta content=&#39;Systems Architect&#39; itemprop=&#39;jobTitle&#39; /&gt;&lt;a href=&#39;https://plus.google.com/102632274470030995679&#39; itemprop=&#39;url&#39;&gt;Remco&lt;/a&gt;&lt;/span&gt; worked on the animations of the hexagons in the services section. These don&amp;#8217;t use a clip-path since that would be a lot harder to animate in this way. He built up the hexagons out of three parts that he animates separately using jQuery to achieve the result that you see.&lt;/p&gt;
+
+&lt;p&gt;The map that you see at the very bottom of the page, behind our contact form, is an actual functional Google Map. The color comes from the custom styling that we ue to initialize the map, which is just a saturation of -100.&lt;/p&gt;
+
+&lt;h1 id=&#39;conclusion&#39;&gt;Conclusion&lt;/h1&gt;
+
+&lt;p&gt;And that&amp;#8217;s nub.is! All in all the process was quite hectic but we&amp;#8217;re very happy with the end result, code-wise and looks-wise. If you have any questions, suggestions or hatemail regarding the site, please don&amp;#8217;t hesitate to contact us.&lt;/p&gt;</description>
+                                <pubDate>Thu, 17 Oct 2013 00:00:00 +0200</pubDate>
+                                <link>http://development.nub.is/nubis/2013/10/17/new-nubis-site/</link>
+                                <guid isPermaLink="true">http://development.nub.is/nubis/2013/10/17/new-nubis-site/</guid>
+								<author>Tim van Dalen</author>
+                        </item>
+                
+                        <item>
+                                <title>{Ruby,MongoDB,MongoMapper} = Strict models and implied schemas</title>
+                                <description>&lt;p&gt;Every web developer that has ever worked with PHP and MySQL (still the most common database solution out there) knows that it can be quite frustrating to set up your database schema. Most people start with a simple ER diagram that they then translate into SQL (and most web devs will use phpMyAdmin for this &amp;#8216;chore&amp;#8217;). When that&amp;#8217;s done, you can really get cracking. Looking at your database schema, you can start to write your database interface logic. If you have a change in functionality you need to translate this to SQL and apply it to your schema.&lt;/p&gt;
+
+&lt;p&gt;Because of this separation between your code and the database your schema &amp;#8216;lives&amp;#8217; in two places. This creates a strong coupling between your code and the database schema. What that means is that if you change one, you need to change the other for everything to still work as expected. Usually, you want to avoid coupling because it can cause hard to track down bugs. Sure, you can store your SQL alongside your code in your versioning software, but that&amp;#8217;s just not good enough (unless you use some arcane magic to update the database schema without data loss on every x runs of your program).&lt;/p&gt;
+
+&lt;p&gt;So far for what it&amp;#8217;s usually like for web developers. I&amp;#8217;m now going to describe how &lt;a href=&#39;https://github.com/mongomapper/mongomapper&#39;&gt;MongoMapper&lt;/a&gt; handles things. I&amp;#8217;ll first describe the MongoDB system, for those that haven&amp;#8217;t encountered it yet.&lt;/p&gt;
+
+&lt;p&gt;In its core, mongo is a document-oriented database system, as opposed to a relational database. Mongo doesn&amp;#8217;t have tables, but &lt;em&gt;collections of documents&lt;/em&gt;. These documents are represented as JSON (or rather BSON, a binary compatible form of JSON). For instance:&lt;/p&gt;
+&lt;div class=&#39;highlight&#39;&gt;&lt;pre&gt;&lt;code class=&#39;json&#39;&gt;&lt;span class=&#39;p&#39;&gt;{&lt;/span&gt;
+	&lt;span class=&#39;nt&#39;&gt;&amp;quot;first_name&amp;quot;&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;:&lt;/span&gt; &lt;span class=&#39;s2&#39;&gt;&amp;quot;John&amp;quot;&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;,&lt;/span&gt;
+	&lt;span class=&#39;nt&#39;&gt;&amp;quot;last_name&amp;quot;&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;:&lt;/span&gt; &lt;span class=&#39;s2&#39;&gt;&amp;quot;Doe&amp;quot;&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;,&lt;/span&gt;
+	&lt;span class=&#39;nt&#39;&gt;&amp;quot;initials&amp;quot;&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;:&lt;/span&gt; &lt;span class=&#39;s2&#39;&gt;&amp;quot;J.D.&amp;quot;&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;,&lt;/span&gt;
+	&lt;span class=&#39;nt&#39;&gt;&amp;quot;age&amp;quot;&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;:&lt;/span&gt; &lt;span class=&#39;mi&#39;&gt;24&lt;/span&gt;
+&lt;span class=&#39;p&#39;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;But the following is also a document:&lt;/p&gt;
+&lt;div class=&#39;highlight&#39;&gt;&lt;pre&gt;&lt;code class=&#39;json&#39;&gt;&lt;span class=&#39;p&#39;&gt;{&lt;/span&gt;
+	&lt;span class=&#39;nt&#39;&gt;&amp;quot;name&amp;quot;&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;:&lt;/span&gt; &lt;span class=&#39;p&#39;&gt;{&lt;/span&gt;
+		&lt;span class=&#39;nt&#39;&gt;&amp;quot;first&amp;quot;&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;:&lt;/span&gt; &lt;span class=&#39;s2&#39;&gt;&amp;quot;John&amp;quot;&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;,&lt;/span&gt;
+		&lt;span class=&#39;nt&#39;&gt;&amp;quot;last&amp;quot;&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;:&lt;/span&gt; &lt;span class=&#39;s2&#39;&gt;&amp;quot;Doe&amp;quot;&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;,&lt;/span&gt;
+		&lt;span class=&#39;nt&#39;&gt;&amp;quot;initials&amp;quot;&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;:&lt;/span&gt; &lt;span class=&#39;s2&#39;&gt;&amp;quot;J.D.&amp;quot;&lt;/span&gt;
+	&lt;span class=&#39;p&#39;&gt;},&lt;/span&gt;
+	&lt;span class=&#39;nt&#39;&gt;&amp;quot;age&amp;quot;&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;:&lt;/span&gt; &lt;span class=&#39;mi&#39;&gt;24&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;,&lt;/span&gt;
+	&lt;span class=&#39;nt&#39;&gt;&amp;quot;comments&amp;quot;&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;:&lt;/span&gt; &lt;span class=&#39;p&#39;&gt;[&lt;/span&gt;
+		&lt;span class=&#39;p&#39;&gt;{&lt;/span&gt; &lt;span class=&#39;nt&#39;&gt;&amp;quot;text&amp;quot;&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;:&lt;/span&gt; &lt;span class=&#39;s2&#39;&gt;&amp;quot;I liked this&amp;quot;&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;,&lt;/span&gt; &lt;span class=&#39;nt&#39;&gt;&amp;quot;article&amp;quot;&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;:&lt;/span&gt; &lt;span class=&#39;p&#39;&gt;{&lt;/span&gt; &lt;span class=&#39;err&#39;&gt;...&lt;/span&gt; &lt;span class=&#39;p&#39;&gt;}&lt;/span&gt; &lt;span class=&#39;p&#39;&gt;},&lt;/span&gt;
+		&lt;span class=&#39;p&#39;&gt;{&lt;/span&gt; &lt;span class=&#39;nt&#39;&gt;&amp;quot;text&amp;quot;&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;:&lt;/span&gt; &lt;span class=&#39;s2&#39;&gt;&amp;quot;I didn&amp;#39;t like this&amp;quot;&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;,&lt;/span&gt; &lt;span class=&#39;nt&#39;&gt;&amp;quot;article&amp;quot;&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;:&lt;/span&gt; &lt;span class=&#39;p&#39;&gt;{&lt;/span&gt; &lt;span class=&#39;err&#39;&gt;...&lt;/span&gt; &lt;span class=&#39;p&#39;&gt;}&lt;/span&gt; &lt;span class=&#39;p&#39;&gt;},&lt;/span&gt;
+		&lt;span class=&#39;p&#39;&gt;{&lt;/span&gt; &lt;span class=&#39;nt&#39;&gt;&amp;quot;text&amp;quot;&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;:&lt;/span&gt; &lt;span class=&#39;s2&#39;&gt;&amp;quot;This was great!&amp;quot;&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;,&lt;/span&gt; &lt;span class=&#39;nt&#39;&gt;&amp;quot;article&amp;quot;&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;:&lt;/span&gt; &lt;span class=&#39;p&#39;&gt;{&lt;/span&gt; &lt;span class=&#39;err&#39;&gt;...&lt;/span&gt; &lt;span class=&#39;p&#39;&gt;}&lt;/span&gt; &lt;span class=&#39;p&#39;&gt;}&lt;/span&gt;
+	&lt;span class=&#39;p&#39;&gt;]&lt;/span&gt;
+&lt;span class=&#39;p&#39;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;As you can see, documents are much more versatile than tables because they have a sense of hierarchy. Note that you can still build relational-like models using mongo. For instance, in the second example, you would probably include the key of an article in each comment, instead of the actual entire article.&lt;/p&gt;
+
+&lt;p&gt;Mongo provides a pretty easy way to access collections:&lt;/p&gt;
+&lt;div class=&#39;highlight&#39;&gt;&lt;pre&gt;&lt;code class=&#39;js&#39;&gt;&lt;span class=&#39;nx&#39;&gt;db&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;.&lt;/span&gt;&lt;span class=&#39;nx&#39;&gt;a&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;.&lt;/span&gt;&lt;span class=&#39;nx&#39;&gt;save&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;({&lt;/span&gt;&lt;span class=&#39;nx&#39;&gt;a&lt;/span&gt;&lt;span class=&#39;o&#39;&gt;:&lt;/span&gt; &lt;span class=&#39;mi&#39;&gt;25&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;})&lt;/span&gt;
+&lt;span class=&#39;nx&#39;&gt;db&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;.&lt;/span&gt;&lt;span class=&#39;nx&#39;&gt;a&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;.&lt;/span&gt;&lt;span class=&#39;nx&#39;&gt;find&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;()&lt;/span&gt;
+ &lt;span class=&#39;o&#39;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#39;p&#39;&gt;[&lt;/span&gt; &lt;span class=&#39;p&#39;&gt;{&lt;/span&gt;&lt;span class=&#39;nx&#39;&gt;a&lt;/span&gt;&lt;span class=&#39;o&#39;&gt;:&lt;/span&gt; &lt;span class=&#39;mi&#39;&gt;25&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;}&lt;/span&gt; &lt;span class=&#39;p&#39;&gt;]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Good, now on to MongoMapper. It defines itself as &amp;#8216;a mongo object relationship mapper&amp;#8217;, which means that it provides a mechanism for translating Ruby objects into Mongo and vice-versa. Now what that means to me is this: persistent storage for your Ruby runtime objects. And as far as I&amp;#8217;m concerned, that is &lt;em&gt;amazing&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;After I played with it for a night I found that it was a little bit less transparent than I had hoped and I had to mess around with a lot of details before I got it working correctly, but the underlying philosophy is truely beautiful. You can mark your Ruby objects as Documents and MongoMapper will take care of everything for you (as long as you use their constructor). Consider these classes:&lt;/p&gt;
+&lt;div class=&#39;highlight&#39;&gt;&lt;pre&gt;&lt;code class=&#39;ruby&#39;&gt;&lt;span class=&#39;k&#39;&gt;class&lt;/span&gt; &lt;span class=&#39;nc&#39;&gt;User&lt;/span&gt;
+	&lt;span class=&#39;kp&#39;&gt;include&lt;/span&gt; &lt;span class=&#39;ss&#39;&gt;MongoMapper&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;:&lt;/span&gt;&lt;span class=&#39;ss&#39;&gt;:Document&lt;/span&gt;
+
+	&lt;span class=&#39;n&#39;&gt;key&lt;/span&gt; &lt;span class=&#39;ss&#39;&gt;:name&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;,&lt;/span&gt; &lt;span class=&#39;no&#39;&gt;Name&lt;/span&gt;
+	&lt;span class=&#39;n&#39;&gt;key&lt;/span&gt; &lt;span class=&#39;ss&#39;&gt;:age&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;,&lt;/span&gt; &lt;span class=&#39;nb&#39;&gt;Integer&lt;/span&gt;
+	&lt;span class=&#39;n&#39;&gt;many&lt;/span&gt; &lt;span class=&#39;ss&#39;&gt;:comments&lt;/span&gt;
+	&lt;span class=&#39;n&#39;&gt;many&lt;/span&gt; &lt;span class=&#39;ss&#39;&gt;:articles&lt;/span&gt;
+&lt;span class=&#39;k&#39;&gt;end&lt;/span&gt;
+
+&lt;span class=&#39;k&#39;&gt;class&lt;/span&gt; &lt;span class=&#39;nc&#39;&gt;Name&lt;/span&gt;
+	&lt;span class=&#39;kp&#39;&gt;include&lt;/span&gt; &lt;span class=&#39;ss&#39;&gt;MongoMapper&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;:&lt;/span&gt;&lt;span class=&#39;ss&#39;&gt;:EmbeddedDocument&lt;/span&gt;
+
+	&lt;span class=&#39;n&#39;&gt;key&lt;/span&gt; &lt;span class=&#39;ss&#39;&gt;:first&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;,&lt;/span&gt; &lt;span class=&#39;nb&#39;&gt;String&lt;/span&gt;
+	&lt;span class=&#39;n&#39;&gt;key&lt;/span&gt; &lt;span class=&#39;ss&#39;&gt;:last&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;,&lt;/span&gt; &lt;span class=&#39;nb&#39;&gt;String&lt;/span&gt;
+	&lt;span class=&#39;n&#39;&gt;key&lt;/span&gt; &lt;span class=&#39;ss&#39;&gt;:initials&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;,&lt;/span&gt; &lt;span class=&#39;nb&#39;&gt;String&lt;/span&gt;
+&lt;span class=&#39;k&#39;&gt;end&lt;/span&gt;
+
+&lt;span class=&#39;k&#39;&gt;class&lt;/span&gt; &lt;span class=&#39;nc&#39;&gt;Comment&lt;/span&gt;
+	&lt;span class=&#39;kp&#39;&gt;include&lt;/span&gt; &lt;span class=&#39;ss&#39;&gt;MongoMapper&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;:&lt;/span&gt;&lt;span class=&#39;ss&#39;&gt;:Document&lt;/span&gt;
+
+	&lt;span class=&#39;n&#39;&gt;key&lt;/span&gt; &lt;span class=&#39;ss&#39;&gt;:text&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;,&lt;/span&gt; &lt;span class=&#39;nb&#39;&gt;String&lt;/span&gt;
+	&lt;span class=&#39;n&#39;&gt;belongs_to&lt;/span&gt; &lt;span class=&#39;ss&#39;&gt;:article&lt;/span&gt;
+	&lt;span class=&#39;n&#39;&gt;belongs_to&lt;/span&gt; &lt;span class=&#39;ss&#39;&gt;:user&lt;/span&gt;
+&lt;span class=&#39;k&#39;&gt;end&lt;/span&gt;
+
+&lt;span class=&#39;k&#39;&gt;class&lt;/span&gt; &lt;span class=&#39;nc&#39;&gt;Article&lt;/span&gt;
+	&lt;span class=&#39;kp&#39;&gt;include&lt;/span&gt; &lt;span class=&#39;ss&#39;&gt;MongoMapper&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;:&lt;/span&gt;&lt;span class=&#39;ss&#39;&gt;:Document&lt;/span&gt;
+	
+	&lt;span class=&#39;n&#39;&gt;belongs_to&lt;/span&gt; &lt;span class=&#39;ss&#39;&gt;:author&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;,&lt;/span&gt; &lt;span class=&#39;ss&#39;&gt;:class_name&lt;/span&gt; &lt;span class=&#39;o&#39;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#39;s1&#39;&gt;&amp;#39;User&amp;#39;&lt;/span&gt;
+	&lt;span class=&#39;n&#39;&gt;key&lt;/span&gt; &lt;span class=&#39;ss&#39;&gt;:text&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;,&lt;/span&gt; &lt;span class=&#39;nb&#39;&gt;String&lt;/span&gt;
+
+	&lt;span class=&#39;n&#39;&gt;many&lt;/span&gt; &lt;span class=&#39;ss&#39;&gt;:comments&lt;/span&gt;
+&lt;span class=&#39;k&#39;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This will create a model that is represented like this in UML:&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt=&#39;UML diagrams - how enterprisey!&#39; src=&#39;/post-imgs/mongomapper-uml.png&#39; /&gt;&lt;/p&gt;
+
+&lt;p&gt;One of the interesting things to note here is that in class &lt;code&gt;User&lt;/code&gt;, MongoMapper will read &lt;code&gt;many :comments&lt;/code&gt; as: a &lt;code&gt;User&lt;/code&gt; has 0..\infty instances of class Comment. It derives that info just from me giving the key the name &lt;code&gt;comments&lt;/code&gt; (and the fact that there are &lt;code&gt;many&lt;/code&gt;). In class &lt;code&gt;Article&lt;/code&gt; you see that I explicitly state that &lt;code&gt;author&lt;/code&gt; is of type User since I don&amp;#8217;t want to call the property &amp;#8216;user&amp;#8217; in that class.&lt;/p&gt;
+
+&lt;p&gt;The thing that really blew my mind was that even though this is stored in Mongo in a relational way (there will be three collections, &lt;code&gt;user&lt;/code&gt;, &lt;code&gt;comment&lt;/code&gt; and &lt;code&gt;article&lt;/code&gt; and relations like &lt;code&gt;belongs_to :user&lt;/code&gt; will generate a JSON entry &lt;code&gt;&amp;quot;user_id&amp;quot;: &amp;quot;233f32f32f332ras&amp;quot;&lt;/code&gt;), all the information you need is dynamically available if you have a reference to an object. Assume that the John Doe that I defined earlier is in the database.&lt;/p&gt;
+&lt;div class=&#39;highlight&#39;&gt;&lt;pre&gt;&lt;code class=&#39;ruby&#39;&gt;&lt;span class=&#39;n&#39;&gt;john&lt;/span&gt; &lt;span class=&#39;o&#39;&gt;=&lt;/span&gt; &lt;span class=&#39;no&#39;&gt;User&lt;/span&gt;&lt;span class=&#39;o&#39;&gt;.&lt;/span&gt;&lt;span class=&#39;n&#39;&gt;first&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;(&lt;/span&gt;&lt;span class=&#39;ss&#39;&gt;:age&lt;/span&gt; &lt;span class=&#39;o&#39;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#39;mi&#39;&gt;24&lt;/span&gt;&lt;span class=&#39;p&#39;&gt;)&lt;/span&gt;
+&lt;span class=&#39;nb&#39;&gt;puts&lt;/span&gt; &lt;span class=&#39;n&#39;&gt;john&lt;/span&gt;&lt;span class=&#39;o&#39;&gt;.&lt;/span&gt;&lt;span class=&#39;n&#39;&gt;comments&lt;/span&gt;&lt;span class=&#39;o&#39;&gt;[&lt;/span&gt;&lt;span class=&#39;mi&#39;&gt;0&lt;/span&gt;&lt;span class=&#39;o&#39;&gt;].&lt;/span&gt;&lt;span class=&#39;n&#39;&gt;article&lt;/span&gt;&lt;span class=&#39;o&#39;&gt;.&lt;/span&gt;&lt;span class=&#39;n&#39;&gt;author&lt;/span&gt;&lt;span class=&#39;o&#39;&gt;.&lt;/span&gt;&lt;span class=&#39;n&#39;&gt;name&lt;/span&gt;&lt;span class=&#39;o&#39;&gt;.&lt;/span&gt;&lt;span class=&#39;n&#39;&gt;first&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;That &lt;em&gt;one&lt;/em&gt; line will perform all the queries nessecary to:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Select all comments by John&lt;/li&gt;
+
+&lt;li&gt;Get the first&lt;/li&gt;
+
+&lt;li&gt;Select the article that comment was made on using the article id&lt;/li&gt;
+
+&lt;li&gt;Select the author for that article using the author_id&lt;/li&gt;
+
+&lt;li&gt;Get the Name object for that author&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;For those of you with PHP/MySQL experience, think about the monster query you would need to accomplish the same, providing you have &lt;code&gt;User&lt;/code&gt;, &lt;code&gt;Name&lt;/code&gt;, &lt;code&gt;Comment&lt;/code&gt; and &lt;code&gt;Article&lt;/code&gt; tables (although to be fair you would probably flatten &lt;code&gt;Name&lt;/code&gt; into &lt;code&gt;User&lt;/code&gt;).&lt;/p&gt;
+
+&lt;p&gt;So, using MongoMapper with Ruby and MongoDB, all the structure in your database comes from your model which solves the coupling problem and also makes working with it a whole lot more fun. There are a couple of downsides though, the most important of which is that if your database doesn&amp;#8217;t have an internally defined structure, you need to keep that structure in mind yourself when you make manual edits. If you need to pre-fill a MySQL database, you would probably just use phpMyAdmin and fill out the web forms.&lt;/p&gt;
+
+&lt;p&gt;Since the schema comes from your application model, you can&amp;#8217;t do that easily when you are using MongoMapper. The easiest way to pre-fill data is to just write a quick script that imports your model and creates the nessecary data for you. Doing it manually would mean that you have to type out your data in BSON format like MongoMapper would generate it - &lt;em&gt;including&lt;/em&gt; a unique ID for each document.&lt;/p&gt;
+
+&lt;p&gt;In conclusion, I had a great time playing with MongoMapper and I can highly recommend giving it a try.&lt;/p&gt;</description>
+                                <pubDate>Fri, 13 Sep 2013 00:00:00 +0200</pubDate>
+                                <link>http://development.nub.is/programming/2013/09/13/ruby-mongo-mapper/</link>
+                                <guid isPermaLink="true">http://development.nub.is/programming/2013/09/13/ruby-mongo-mapper/</guid>
+								<author>Tim van Dalen</author>
+                        </item>
+                
+                        <item>
+                                <title>jekyll-xkcd-embed: Plugin for easily embedding xkcd comics into your blog posts</title>
+                                <description>&lt;p&gt;In everyday conversation, there&amp;#8217;s often a relevant-xkcd-moment. When the conversation has reached a state which has been described in a xkcd comic. In writing, these moments occur too. This is why &lt;span itemscope=&#39;&#39; itemtype=&#39;http://schema.org/Person&#39;&gt;&lt;meta content=&#39;Tim van Dalen&#39; itemprop=&#39;name&#39; /&gt;&lt;meta content=&#39;Head of Development&#39; itemprop=&#39;jobTitle&#39; /&gt;&lt;a href=&#39;https://plus.google.com/100487696573936783003&#39; itemprop=&#39;url&#39;&gt;Tim&lt;/a&gt;&lt;/span&gt; decided that we needed an easy way to embed xkcd comics in our blog posts.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#39;https://github.com/nubisonline/jekyll-xckd-embed&#39;&gt;jekyll-xkcd-embed&lt;/a&gt; is a plugin that allows you to embed a xkcd comic very easily. You can embed a comic by using: &lt;code&gt;{% xkcd 6 %}&lt;/code&gt;. This will then result in either a link if no comic was found, or the comic in the following format: &lt;figure class=&#39;xkcd-embed&#39;&gt;
+					&lt;a href=&#39;http://xkcd.com/688&#39;&gt;&lt;img alt=&#39;http://xkcd.com/688&#39; src=&#39;http://imgs.xkcd.com/comics/self_description.png&#39; title=&#39;The contents of any one panel are dependent on the contents of every panel including itself. The graph of panel dependencies is complete and bidirectional, and each node has a loop. The mouseover text has two hundred and forty-two characters.&#39; /&gt;&lt;/a&gt;&lt;figcaption&gt;&quot;Self-Description&quot; - created by &lt;a href=&#39;http://xkcd.com&#39;&gt;xkcd&lt;/a&gt;&lt;/figcaption&gt;&lt;/figure&gt;&lt;/p&gt;
+
+&lt;p&gt;You are now ready to use the plugin, but you probably want to do some styling of the image so let&amp;#8217;s look at the returned HTML. Say we embed a non-existing xkcd, for example comic #0. Then, a 404 error is returned by xkcd and the embed will return the following code:&lt;/p&gt;
+&lt;div class=&#39;highlight&#39;&gt;&lt;pre&gt;&lt;code class=&#39;html&#39;&gt;&lt;span class=&#39;nt&#39;&gt;&amp;lt;span&amp;gt;&amp;lt;a&lt;/span&gt; &lt;span class=&#39;na&#39;&gt;href=&lt;/span&gt;&lt;span class=&#39;s&#39;&gt;&amp;quot;http://xkcd.com/0&amp;quot;&lt;/span&gt;&lt;span class=&#39;nt&#39;&gt;&amp;gt;&lt;/span&gt;xkcd-0&lt;span class=&#39;nt&#39;&gt;&amp;lt;/a&amp;gt;&amp;lt;/span&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;If a comic was found, the image is returned within the HTML figure element. This figure has class &amp;#8220;xkcd-embed&amp;#8221; and contains the image of the comic as a link to the included page. As well as the title (or mouseover) text of the comic.&lt;/p&gt;
+&lt;div class=&#39;highlight&#39;&gt;&lt;pre&gt;&lt;code class=&#39;html&#39;&gt;&lt;span class=&#39;nt&#39;&gt;&amp;lt;figure&lt;/span&gt; &lt;span class=&#39;na&#39;&gt;class=&lt;/span&gt;&lt;span class=&#39;s&#39;&gt;&amp;quot;xkcd-embed&amp;quot;&lt;/span&gt;&lt;span class=&#39;nt&#39;&gt;&amp;gt;&lt;/span&gt;...&lt;span class=&#39;nt&#39;&gt;&amp;lt;/figure&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;For the title of the comic and the attribution, the figcaption element is used. Which includes the comic title with suffix: &amp;#8221; - created by xkcd&amp;#8221;, where xkcd is a link to xkcd.com.&lt;/p&gt;
+&lt;div class=&#39;highlight&#39;&gt;&lt;pre&gt;&lt;code class=&#39;html&#39;&gt;&lt;span class=&#39;nt&#39;&gt;&amp;lt;figcaption&amp;gt;&lt;/span&gt;&amp;quot;title&amp;quot; - created by &lt;span class=&#39;nt&#39;&gt;&amp;lt;a&lt;/span&gt; &lt;span class=&#39;na&#39;&gt;href=&lt;/span&gt;&lt;span class=&#39;s&#39;&gt;&amp;quot;http://xkcd.com&amp;quot;&lt;/span&gt;&lt;span class=&#39;nt&#39;&gt;&amp;gt;&lt;/span&gt;xkcd&lt;span class=&#39;nt&#39;&gt;&amp;lt;/a&amp;gt;&amp;lt;/figcaption&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;That is all there is to it. Let me close this second meta post of with another embedded xkcd comic: &lt;figure class=&#39;xkcd-embed&#39;&gt;
+					&lt;a href=&#39;http://xkcd.com/917&#39;&gt;&lt;img alt=&#39;http://xkcd.com/917&#39; src=&#39;http://imgs.xkcd.com/comics/hofstadter.png&#39; title=&#39;&amp;quot;This is the reference implementation of the self-referential joke.&amp;quot;&#39; /&gt;&lt;/a&gt;&lt;figcaption&gt;&quot;Hofstadter&quot; - created by &lt;a href=&#39;http://xkcd.com&#39;&gt;xkcd&lt;/a&gt;&lt;/figcaption&gt;&lt;/figure&gt;&lt;/p&gt;</description>
+                                <pubDate>Sun, 25 Aug 2013 00:00:00 +0200</pubDate>
+                                <link>http://development.nub.is/jekyll-plugin/2013/08/25/jekyll-xkcd-embed/</link>
+                                <guid isPermaLink="true">http://development.nub.is/jekyll-plugin/2013/08/25/jekyll-xkcd-embed/</guid>
+								<author>Robbert Jongeling</author>
+                        </item>
+                
+                        <item>
+                                <title>jekyll-mention-schema: Plugin that allows you to mention a co-author with Schema.org notation</title>
+                                <description>&lt;p&gt;I&amp;#8217;m honored to bring you the first meta blog post. Since we&amp;#8217;ll we sharing the source code of this blog with the world we thought it would be a nice idea to also write about said code here. Most features will be implemented as Jekyll plugins so you can easily submodule them in your own blogs. Today, I announce the first of those plugins.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#39;http://github.com/nubisonline/jekyll-mention-schema&#39;&gt;jekyll-mention-schema&lt;/a&gt; is a very simple way to mention your co-authors. It will do this using &lt;a href=&#39;http://schema.org&#39;&gt;Schema.org&lt;/a&gt; notation which means the output is easily parsed by machines (such as your favorite search engine).&lt;/p&gt;
+
+&lt;p&gt;The plugin depends on an array of authors in your global site config like this:&lt;/p&gt;
+&lt;div class=&#39;highlight&#39;&gt;&lt;pre&gt;&lt;code class=&#39;yaml&#39;&gt;&lt;span class=&#39;l-Scalar-Plain&#39;&gt;authors&lt;/span&gt;&lt;span class=&#39;p-Indicator&#39;&gt;:&lt;/span&gt;
+  &lt;span class=&#39;l-Scalar-Plain&#39;&gt;user1&lt;/span&gt;&lt;span class=&#39;p-Indicator&#39;&gt;:&lt;/span&gt;
+    &lt;span class=&#39;l-Scalar-Plain&#39;&gt;display_name&lt;/span&gt;&lt;span class=&#39;p-Indicator&#39;&gt;:&lt;/span&gt; &lt;span class=&#39;l-Scalar-Plain&#39;&gt;1User&lt;/span&gt;
+    &lt;span class=&#39;l-Scalar-Plain&#39;&gt;full_name&lt;/span&gt;&lt;span class=&#39;p-Indicator&#39;&gt;:&lt;/span&gt; &lt;span class=&#39;l-Scalar-Plain&#39;&gt;User von Wanningston&lt;/span&gt;
+    &lt;span class=&#39;l-Scalar-Plain&#39;&gt;gplus_id&lt;/span&gt;&lt;span class=&#39;p-Indicator&#39;&gt;:&lt;/span&gt; &lt;span class=&#39;l-Scalar-Plain&#39;&gt;118082699456363103031&lt;/span&gt;
+    &lt;span class=&#39;l-Scalar-Plain&#39;&gt;position&lt;/span&gt;&lt;span class=&#39;p-Indicator&#39;&gt;:&lt;/span&gt; &lt;span class=&#39;l-Scalar-Plain&#39;&gt;Senior VP of Jekyll plugins&lt;/span&gt;
+  &lt;span class=&#39;l-Scalar-Plain&#39;&gt;otherauth&lt;/span&gt;&lt;span class=&#39;p-Indicator&#39;&gt;:&lt;/span&gt;
+    &lt;span class=&#39;l-Scalar-Plain&#39;&gt;display_name&lt;/span&gt;&lt;span class=&#39;p-Indicator&#39;&gt;:&lt;/span&gt; &lt;span class=&#39;l-Scalar-Plain&#39;&gt;Otter&lt;/span&gt;
+    &lt;span class=&#39;l-Scalar-Plain&#39;&gt;full_name&lt;/span&gt;&lt;span class=&#39;p-Indicator&#39;&gt;:&lt;/span&gt; &lt;span class=&#39;l-Scalar-Plain&#39;&gt;Oth&amp;amp;eacute;r Auteur&lt;/span&gt;
+    &lt;span class=&#39;l-Scalar-Plain&#39;&gt;gplus_id&lt;/span&gt;&lt;span class=&#39;p-Indicator&#39;&gt;:&lt;/span&gt; &lt;span class=&#39;l-Scalar-Plain&#39;&gt;118082699456363103031&lt;/span&gt;
+    &lt;span class=&#39;l-Scalar-Plain&#39;&gt;position&lt;/span&gt;&lt;span class=&#39;p-Indicator&#39;&gt;:&lt;/span&gt; &lt;span class=&#39;l-Scalar-Plain&#39;&gt;Blagosphere Watcher&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Then, you can mention a user like this: &lt;code&gt;{% mention user1 %}&lt;/code&gt;, which will result in the following HTML output.&lt;/p&gt;
+&lt;div class=&#39;highlight&#39;&gt;&lt;pre&gt;&lt;code class=&#39;html&#39;&gt;&lt;span class=&#39;nt&#39;&gt;&amp;lt;span&lt;/span&gt; &lt;span class=&#39;na&#39;&gt;itemscope&lt;/span&gt; &lt;span class=&#39;na&#39;&gt;itemtype=&lt;/span&gt;&lt;span class=&#39;s&#39;&gt;&amp;#39;http://schema.org/Person&amp;#39;&lt;/span&gt;&lt;span class=&#39;nt&#39;&gt;&amp;gt;&lt;/span&gt;
+	&lt;span class=&#39;nt&#39;&gt;&amp;lt;meta&lt;/span&gt; &lt;span class=&#39;na&#39;&gt;itemprop=&lt;/span&gt;&lt;span class=&#39;s&#39;&gt;&amp;#39;name&amp;#39;&lt;/span&gt; &lt;span class=&#39;na&#39;&gt;content=&lt;/span&gt;&lt;span class=&#39;s&#39;&gt;&amp;#39;User von Wanningston&amp;#39;&lt;/span&gt; &lt;span class=&#39;nt&#39;&gt;/&amp;gt;&lt;/span&gt;
+	&lt;span class=&#39;nt&#39;&gt;&amp;lt;meta&lt;/span&gt; &lt;span class=&#39;na&#39;&gt;itemprop=&lt;/span&gt;&lt;span class=&#39;s&#39;&gt;&amp;#39;jobTitle&amp;#39;&lt;/span&gt; &lt;span class=&#39;na&#39;&gt;content=&lt;/span&gt;&lt;span class=&#39;s&#39;&gt;&amp;#39;Senior VP of Jekyll plugins&amp;#39;&lt;/span&gt; &lt;span class=&#39;nt&#39;&gt;/&amp;gt;&lt;/span&gt;
+	&lt;span class=&#39;nt&#39;&gt;&amp;lt;a&lt;/span&gt; &lt;span class=&#39;na&#39;&gt;href=&lt;/span&gt;&lt;span class=&#39;s&#39;&gt;&amp;#39;https://plus.google.com/118082699456363103031&amp;#39;&lt;/span&gt; &lt;span class=&#39;na&#39;&gt;itemprop=&lt;/span&gt;&lt;span class=&#39;s&#39;&gt;&amp;#39;url&amp;#39;&lt;/span&gt;&lt;span class=&#39;nt&#39;&gt;&amp;gt;&lt;/span&gt;1User&lt;span class=&#39;nt&#39;&gt;&amp;lt;/a&amp;gt;&lt;/span&gt;
+&lt;span class=&#39;nt&#39;&gt;&amp;lt;/span&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And so ends the very first meta post. The next one will be by &lt;span itemscope=&#39;&#39; itemtype=&#39;http://schema.org/Person&#39;&gt;&lt;meta content=&#39;Robbert Jongeling&#39; itemprop=&#39;name&#39; /&gt;&lt;meta content=&#39;Junior Developer&#39; itemprop=&#39;jobTitle&#39; /&gt;&lt;a href=&#39;https://plus.google.com/111701719727853867628&#39; itemprop=&#39;url&#39;&gt;Robbert&lt;/a&gt;&lt;/span&gt; (oh yes, I just totally mentioned Robbert using jekyll-mention-schema. Don&amp;#8217;t believe me? Check the &lt;a href=&#39;https://github.com/nubisonline/development-blog/blob/source/_posts/2013-08-22-jekyll-mention-schema.md&#39;&gt;source&lt;/a&gt; of this page).&lt;/p&gt;</description>
+                                <pubDate>Thu, 22 Aug 2013 00:00:00 +0200</pubDate>
+                                <link>http://development.nub.is/jekyll-plugin/2013/08/22/jekyll-mention-schema/</link>
+                                <guid isPermaLink="true">http://development.nub.is/jekyll-plugin/2013/08/22/jekyll-mention-schema/</guid>
+								<author>Tim van Dalen</author>
+                        </item>
+                
+        </channel>
+</rss>
